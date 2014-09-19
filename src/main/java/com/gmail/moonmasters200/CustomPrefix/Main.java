@@ -1,5 +1,9 @@
 package com.gmail.moonmasters200.CustomPrefix;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -24,7 +28,7 @@ public class Main extends JavaPlugin {
 			
 			if (!(sender instanceof Player)) {
 				sender.sendMessage("Only players can set prefixes for themselves.");
-				return false;
+				return true;
 			}
 			
 			
@@ -61,32 +65,55 @@ public class Main extends JavaPlugin {
 				//	return false;
 				//}
 				
-				int firstAmpersand = playerNewPrefix.indexOf('&');
-				char color;
+				/** Check for racist / staff / inappropriate words */
+				//TODO Add an array check if the string contains any of the words there
+				File file = new File ("bannedwords.txt");
+				Scanner in = null;
+        try {
+          in = new Scanner(file);
+        } catch (FileNotFoundException e) {
+          // TODO Auto-generated catch block
+          e.printStackTrace();
+        }
+				int i=0;  String uselessString;
+				while(in.hasNextLine()){
+				  uselessString = in.nextLine();
+				  i++;
+				}
+				in.nextLine();
+				int arrayLength = i;
 				
-				if(!(firstAmpersand == -1)) {
-					color = 'a';
-					
-					if(color == 'd' || color == '4' || color == 'c') {
-						player.sendMessage("You can't use that color.");
-						return true;
-					}
-					if(color == 'k') {
-						player.sendMessage("You can't format your prefix like that.");
-						return true;
-					}
+				
+				i = 0;
+        String bannedwords[] = new String[arrayLength];
+				while(in.hasNextLine()){
+				  // Retrieves words from the bannedwords.txt file and puts them in
+				  // array: bannedwords.
+				  bannedwords[i] = in.nextLine();
+				  i++;
 				}
 				
+								
 				/** This code is in progress to check each color used */
 				/** Default color will be the &5 SWAG-VIP color */
+				/** Not allowed colors include red and pink, &k formatting isn't allowed either */
 				int locationAmpersand;
-				int lastLocation;
+				int lastLocation = 0;
 				locationAmpersand = playerNewPrefix.indexOf('&');
-				lastLocation = locationAmpersand;
-				while(locationAmpersand  == -1) {
-					locationAmpersand = playerNewPrefix.indexOf('&', lastLocation);
-					
-					
+				int locationColor = locationAmpersand + 1;
+				char color = prefix.charAt(locationColor);
+				while(!(locationAmpersand  == -1)) {
+					  locationAmpersand = playerNewPrefix.indexOf('&', lastLocation);
+					  locationColor = locationAmpersand + 1;
+		        color = prefix.charAt(locationColor);
+					  if(color == 'd' || color == '4' || color == 'c') {
+		          player.sendMessage("You can't use that color.");
+		          return true;
+		        }
+		        if(color == 'k') {
+		          player.sendMessage("You can't format your prefix like that.");
+		          return true;
+		        }
 					lastLocation = locationAmpersand;
 				}
 				
