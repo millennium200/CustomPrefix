@@ -24,7 +24,7 @@ public class Main extends JavaPlugin
   }
 
   @
-  SuppressWarnings("deprecation")
+  SuppressWarnings({ "deprecation", "resource" })
   public boolean onCommand(CommandSender sender, Command cmd, String StringLabel, String[] args)
   {
 
@@ -44,14 +44,6 @@ public class Main extends JavaPlugin
         return true;
       }
 
-      /** This argument here wasn't working, so commented out */
-      /** Need more experience before making commands with multiple different arg lengths */
-      //if (args[0].equalsIgnoreCase("reset") && (args[1].equalsIgnoreCase("confirm"))) {
-      //  Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "pex user " + player.getName() +
-      //      " prefix \"\"");
-      //  return true;
-      //} 
-
       if (args[0].equalsIgnoreCase("set"))
       {
 
@@ -70,19 +62,33 @@ public class Main extends JavaPlugin
           player.sendMessage(ChatColor.RED + "[WARNING:] " + ChatColor.AQUA + "Your prefix is too long.");
           return true;
         }
-
-        //if (playerNewPrefix.toLowerCase().contains(Array[])) {
-        //  player.sendMessage("Your prefix can't be that.");
-        //  return false;
-        //}
+        
+        /** This is a very important test to determine if the prefix the user
+         * enters is alphanumeric (with &'s and -'s) or not.
+         */
+        int n = 0;
+        StringBuilder modifiedPrefix = new StringBuilder();
+        char testLetter;
+        while (n < (prefixLength + 1)) {
+          testLetter = playerNewPrefix.charAt(n);
+          if (Character.isLetter(testLetter) || Character.isDigit(testLetter) || (testLetter == '&'))
+          {
+            modifiedPrefix.append(testLetter);
+          } else
+          {
+            player.sendMessage("Your prefix needs to be alphanumeric!");
+            return true;
+          }
+          n++;
+        }
+        String newPrefix = modifiedPrefix.toString();
 
         /** Check for racist / staff / inappropriate words */
         /** This code vvv is not working.  Need to find a new way to check */
 
         //TODO Add an array check if the string contains any of the words there
         File file = new File("/CustomPrefix/src/main/resources/bannedwords.txt");
-        if (file.exists())
-        {
+
           Scanner in = null;
           try
           { in = new Scanner(file);
@@ -114,7 +120,7 @@ public class Main extends JavaPlugin
           }
 
           i = 0;
-          String prefixLowerCase = playerNewPrefix.toLowerCase();
+          String prefixLowerCase = newPrefix.toLowerCase();
           while (i < arrayLength)
           {
             if (prefixLowerCase.contains(bannedwords[i]))
@@ -126,21 +132,19 @@ public class Main extends JavaPlugin
             }
           }
 
-        }
-
         /** This code is in progress to check each color used */
         /** Default color will be the &5 SWAG-VIP color */
         /** Not allowed colors include red and pink, &k formatting isn't allowed either */
         int locationAmpersand;
         int lastLocation = 0;
-        locationAmpersand = playerNewPrefix.indexOf('&');
+        locationAmpersand = newPrefix.indexOf('&');
         int locationColor = locationAmpersand + 1;
-        char color = prefix.charAt(locationColor);
+        char color = newPrefix.charAt(locationColor);
         while (!(locationAmpersand == -1))
         {
-          locationAmpersand = playerNewPrefix.indexOf('&', lastLocation);
+          locationAmpersand = newPrefix.indexOf('&', lastLocation);
           locationColor = locationAmpersand + 1;
-          color = prefix.charAt(locationColor);
+          color = newPrefix.charAt(locationColor);
           if (color == 'd' || color == '4' || color == 'c')
           {
             player.sendMessage("You can't use that color.");
@@ -155,8 +159,8 @@ public class Main extends JavaPlugin
         }
 
         Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + player.getName() +
-          " prefix " + "\"&8&l[&5&l" + args[1] + "&8&l] &5&l\"");
-        player.sendMessage(this.prefix + ChatColor.GREEN + "You set your prefix to " + ChatColor.RESET + ChatColor.BOLD + args[1]);
+          " prefix " + "\"&8&l[&5&l" + newPrefix + "&8&l] &5&l\"");
+        player.sendMessage(this.prefix + ChatColor.GREEN + "You set your prefix to " + ChatColor.RESET + ChatColor.BOLD + newPrefix);
 
         for (Player p: Bukkit.getOnlinePlayers())
         {
