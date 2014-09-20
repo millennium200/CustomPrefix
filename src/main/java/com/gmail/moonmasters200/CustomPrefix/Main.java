@@ -28,7 +28,6 @@ public class Main extends JavaPlugin
   public boolean onCommand(CommandSender sender, Command cmd, String StringLabel, String[] args)
   {
 
-    Player player = (Player) sender;
     if (cmd.getName().equalsIgnoreCase("prefix") && (args.length == 2))
     {
 
@@ -37,6 +36,8 @@ public class Main extends JavaPlugin
         sender.sendMessage("Only players can set prefixes for themselves.");
         return true;
       }
+      
+      Player player = (Player) sender;
 
       if (!player.hasPermission("millenium.prefix.use"))
       {
@@ -85,7 +86,7 @@ public class Main extends JavaPlugin
         /** This code vvv is not working.  Need to find a new way to check */
 
         //TODO Add an array check if the string contains any of the words there
-        File file = new File("/CustomPrefix/src/main/resources/bannedwords.txt");
+        File file = new File("/CustomPrefix/bannedwords.txt");
 
           Scanner in = null;
           try
@@ -169,15 +170,17 @@ public class Main extends JavaPlugin
     }
     else if ((cmd.getName().equalsIgnoreCase("resetprefix") || (cmd.getName().equalsIgnoreCase("prefixreset"))))
     {
-      if (!player.hasPermission("millenium.prefix.use"))
+      if (!(sender instanceof Player))
       {
-        player.sendMessage("You don't have enough swag.");
+        sender.sendMessage("Only players can reset prefixes.");
         return true;
       }
 
-      if (!(sender instanceof Player))
+      Player player = (Player) sender;
+
+      if (!player.hasPermission("millenium.prefix.use"))
       {
-        sender.sendMessage("Only players can set prefixes for themselves.");
+        player.sendMessage("You don't have enough swag.");
         return true;
       }
 
