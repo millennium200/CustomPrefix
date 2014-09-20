@@ -1,8 +1,8 @@
 package com.gmail.moonmasters200.CustomPrefix;
 
-//import java.io.File;
-//import java.io.FileNotFoundException;
-//import java.util.Scanner;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -25,13 +25,12 @@ public class Main extends JavaPlugin {
   public boolean onCommand(CommandSender sender, Command cmd, String StringLabel, String[] args) {
 				
 		Player player = (Player) sender;
-		if (cmd.getName().equalsIgnoreCase("prefix")  && (args.length >= 1)) {
+		if (cmd.getName().equalsIgnoreCase("prefix")) {
 			
 			if (!(sender instanceof Player)) {
 				sender.sendMessage("Only players can set prefixes for themselves.");
 				return true;
 			}
-			
 			
 			if (!player.hasPermission("millenium.prefix.use")) {
 				player.sendMessage("You don't have enough swag.");
@@ -66,7 +65,7 @@ public class Main extends JavaPlugin {
 				
 				/** Check for racist / staff / inappropriate words */
 				/** This code vvv is not working.  Need to find a new way to check */
-				/**
+				
 				//TODO Add an array check if the string contains any of the words there
 				File file = new File ("/CustomPrefix/src/main/resources/bannedwords.txt");
 				if (file.exists()) {
@@ -83,9 +82,7 @@ public class Main extends JavaPlugin {
 				  uselessString = in.nextLine();
 				  i++;
 				}
-				in.nextLine();
 				int arrayLength = i;
-				
 				
 				i = 0;
         String bannedwords[] = new String[arrayLength];
@@ -95,8 +92,20 @@ public class Main extends JavaPlugin {
 				  bannedwords[i] = in.nextLine();
 				  i++;
 				}
+				
+				i = 0;
+				String prefixLowerCase = playerNewPrefix.toLowerCase();
+				while(i < arrayLength) {
+				  if (prefixLowerCase.contains(bannedwords[i])) {
+				    player.sendMessage("You cannot use \"" + ChatColor.RED + ChatColor.ITALIC + ChatColor.BOLD +
+				        "" + bannedwords[i] + ChatColor.RESET + "\" in your prefix.");
+				    i++;
+				    return true;
+				  }
 				}
-				*/
+				
+				}
+				
 								
 				/** This code is in progress to check each color used */
 				/** Default color will be the &5 SWAG-VIP color */
