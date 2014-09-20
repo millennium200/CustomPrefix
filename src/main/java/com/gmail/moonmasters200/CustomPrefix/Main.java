@@ -25,7 +25,7 @@ public class Main extends JavaPlugin {
   public boolean onCommand(CommandSender sender, Command cmd, String StringLabel, String[] args) {
 				
 		Player player = (Player) sender;
-		if (cmd.getName().equalsIgnoreCase("prefix")) {
+		if (cmd.getName().equalsIgnoreCase("prefix")  && (args.length >= 1)) {
 			
 			if (!(sender instanceof Player)) {
 				sender.sendMessage("Only players can set prefixes for themselves.");
@@ -38,11 +38,11 @@ public class Main extends JavaPlugin {
 				return true;
 			}
 			
-			if (args[0].equalsIgnoreCase("reset")) {// && (args.length == 1)
+			if (args[0].equalsIgnoreCase("reset")) {
 				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "pex user " + player.getName() +
 						" prefix \"\"");
 				return true;
-			} else if (args[0].equalsIgnoreCase("set") && (args.length == 2)) {
+			} else if (args[0].equalsIgnoreCase("set")) {
 				
 				/**
 				 * Here, we'll do many different checks on the prefix, a user is trying to use.
@@ -55,8 +55,8 @@ public class Main extends JavaPlugin {
 				int prefixLength = playerNewPrefix.length();
 				
 				if (prefixLength > 8) {
-					player.sendMessage("Your prefix is too long.");
-					return false;
+					player.sendMessage(ChatColor.RED + "[WARNING:] " + ChatColor.AQUA + "Your prefix is too long.");
+					return true;
 				}
 				
 				//if (playerNewPrefix.toLowerCase().contains(Array[])) {
