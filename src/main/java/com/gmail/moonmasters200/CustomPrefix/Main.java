@@ -38,7 +38,7 @@ public class Main extends JavaPlugin {
 				return true;
 			}
 			
-			if (args[0].equalsIgnoreCase("reset") && (args.length == 1)) {
+			if (args[0].equalsIgnoreCase("reset")) {// && (args.length == 1)
 				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "pex user " + player.getName() +
 						" prefix \"\"");
 				return true;
@@ -123,7 +123,7 @@ public class Main extends JavaPlugin {
 				
 				
 				Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + player.getName() +
-						" prefix " + "\"&8&l[&5&l" + args[1] + "&8&l]\" &5&l"); 
+						" prefix " + "\"&8&l[&5&l" + args[1] + "&8&l] &5&l\""); 
 				player.sendMessage(this.prefix + ChatColor.GREEN + "You set your prefix to " + ChatColor.RESET + ChatColor.BOLD
 						+ args[1]);
 				
