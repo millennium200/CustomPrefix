@@ -67,21 +67,19 @@ public class Main extends JavaPlugin
          * enters is alphanumeric (with &'s and -'s) or not.
          */
         int n = 0;
-        StringBuilder modifiedPrefix = new StringBuilder();
         char testLetter;
-        while (n < (prefixLength)) {
+        while (n < (prefixLength - 1)) {
           testLetter = playerNewPrefix.charAt(n);
+          n++;
           if (Character.isLetter(testLetter) || Character.isDigit(testLetter) || (testLetter == '&'))
           {
-            modifiedPrefix.append(testLetter);
+            continue;
           } else
           {
             player.sendMessage("Your prefix needs to be alphanumeric!");
             return true;
           }
-          n++;
         }
-        String newPrefix = modifiedPrefix.toString();
 
         /** Check for racist / staff / inappropriate words */
         /** This code vvv is not working.  Need to find a new way to check */
@@ -120,7 +118,7 @@ public class Main extends JavaPlugin
           }
 
           i = 0;
-          String prefixLowerCase = newPrefix.toLowerCase();
+          String prefixLowerCase = playerNewPrefix.toLowerCase();
           while (i < arrayLength)
           {
             if (prefixLowerCase.contains(bannedwords[i]))
@@ -137,14 +135,14 @@ public class Main extends JavaPlugin
         /** Not allowed colors include red and pink, &k formatting isn't allowed either */
         int locationAmpersand;
         int lastLocation = 0;
-        locationAmpersand = newPrefix.indexOf('&');
+        locationAmpersand = playerNewPrefix.indexOf('&');
         int locationColor = locationAmpersand + 1;
-        char color = newPrefix.charAt(locationColor);
+        char color = playerNewPrefix.charAt(locationColor);
         while (!(locationAmpersand == -1))
         {
-          locationAmpersand = newPrefix.indexOf('&', lastLocation);
+          locationAmpersand = playerNewPrefix.indexOf('&', lastLocation);
           locationColor = locationAmpersand + 1;
-          color = newPrefix.charAt(locationColor);
+          color = playerNewPrefix.charAt(locationColor);
           if (color == 'd' || color == '4' || color == 'c')
           {
             player.sendMessage("You can't use that color.");
@@ -159,8 +157,8 @@ public class Main extends JavaPlugin
         }
 
         Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + player.getName() +
-          " prefix " + "\"&8&l[&5&l" + newPrefix + "&8&l] &5&l\"");
-        player.sendMessage(this.prefix + ChatColor.GREEN + "You set your prefix to " + ChatColor.RESET + ChatColor.BOLD + newPrefix);
+          " prefix " + "\"&8&l[&5&l" + playerNewPrefix + "&8&l] &5&l\"");
+        player.sendMessage(this.prefix + ChatColor.GREEN + "You set your prefix to " + ChatColor.RESET + ChatColor.BOLD + playerNewPrefix);
 
         for (Player p: Bukkit.getOnlinePlayers())
         {
