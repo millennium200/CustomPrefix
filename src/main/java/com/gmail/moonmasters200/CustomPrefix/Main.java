@@ -1,8 +1,8 @@
 package com.gmail.moonmasters200.CustomPrefix;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.Scanner;
+//import java.io.File;
+//import java.io.FileNotFoundException;
+//import java.util.Scanner;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -13,18 +13,19 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class Main extends JavaPlugin {
 	
-	String prefix = "Prefix" + ChatColor.GRAY + ">> ";
-	String error = "ERROR" + ChatColor.GRAY + ">> ";
+	String prefix = "" + ChatColor.BOLD + "Prefix" + ChatColor.GRAY + ChatColor.BOLD + ">> ";
+	String error = "" + ChatColor.BOLD + "ERROR" + ChatColor.GRAY + ChatColor.BOLD + ">> ";
 	
 	public void onEnable() {
 		//getConfig().options.copyDefaults(true);
 		//saveConfig();
 	}
 	
-	public boolean onCommand(CommandSender sender, Command cmd, String StringLabel, String[] args) {
+	@SuppressWarnings("deprecation")
+  public boolean onCommand(CommandSender sender, Command cmd, String StringLabel, String[] args) {
 				
 		Player player = (Player) sender;
-		if ((cmd.getName().equalsIgnoreCase("prefix")) && (args.length == 2)) {
+		if (cmd.getName().equalsIgnoreCase("prefix")) {
 			
 			if (!(sender instanceof Player)) {
 				sender.sendMessage("Only players can set prefixes for themselves.");
@@ -37,13 +38,11 @@ public class Main extends JavaPlugin {
 				return true;
 			}
 			
-			if (args[0].equalsIgnoreCase("reset")) {
+			if (args[0].equalsIgnoreCase("reset") && (args.length == 1)) {
 				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "pex user " + player.getName() +
 						" prefix \"\"");
 				return true;
-			}
-			
-			if (args[0].equalsIgnoreCase("set")) {
+			} else if (args[0].equalsIgnoreCase("set") && (args.length == 2)) {
 				
 				/**
 				 * Here, we'll do many different checks on the prefix, a user is trying to use.
@@ -66,6 +65,8 @@ public class Main extends JavaPlugin {
 				//}
 				
 				/** Check for racist / staff / inappropriate words */
+				/** This code vvv is not working.  Need to find a new way to check */
+				/**
 				//TODO Add an array check if the string contains any of the words there
 				File file = new File ("/CustomPrefix/src/main/resources/bannedwords.txt");
 				if (file.exists()) {
@@ -95,6 +96,7 @@ public class Main extends JavaPlugin {
 				  i++;
 				}
 				}
+				*/
 								
 				/** This code is in progress to check each color used */
 				/** Default color will be the &5 SWAG-VIP color */
@@ -121,9 +123,14 @@ public class Main extends JavaPlugin {
 				
 				
 				Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + player.getName() +
-						" prefix " + "\"&8&l[&5&l" + args[1] + "&8&l]\""); 
-				player.sendMessage(this.prefix + ChatColor.GREEN + "You set your prefix to " + ChatColor.RESET
+						" prefix " + "\"&8&l[&5&l" + args[1] + "&8&l]\" &5&l"); 
+				player.sendMessage(this.prefix + ChatColor.GREEN + "You set your prefix to " + ChatColor.RESET + ChatColor.BOLD
 						+ args[1]);
+				
+				for (Player p : Bukkit.getOnlinePlayers()) {
+	        p.sendMessage(ChatColor.GOLD + "[Swag-Prefixes]" + ChatColor.AQUA + " " + player.getName() + " has set their " + ChatColor.BOLD + "prefix" + ChatColor.AQUA + " using /prefix!");
+	      }
+				return true;
 			}
 		}
 		return false;
