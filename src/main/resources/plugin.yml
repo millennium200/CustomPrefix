@@ -1,11 +1,21 @@
 name: CustomPrefix
 main: com.gmail.moonmasters200.CustomPrefix.Main
-version: 0.0.7-SWAG
+version: 0.0.8-SWAG
 author: millenium200 & moppletop
 commands:
   prefix:
     description: This command changes your prefix.
-    usage: /<command> <set/reset> [prefix]
+    usage: /<command> <set> <prefix>
+    permission: millenium.prefix.use
+    permission-message: You don't have enough swag.
+  prefixreset:
+    description: This command resets your prefix.
+    usage: /<command>
+    permission: millenium.prefix.use
+    permission-message: You don't have enough swag.
+  resetprefix:
+    description: This command resets your prefix.
+    usage: /<command>
     permission: millenium.prefix.use
     permission-message: You don't have enough swag.
 permissions:
