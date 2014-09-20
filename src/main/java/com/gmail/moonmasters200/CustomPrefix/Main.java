@@ -69,7 +69,7 @@ public class Main extends JavaPlugin
         int n = 0;
         StringBuilder modifiedPrefix = new StringBuilder();
         char testLetter;
-        while (n < (prefixLength + 1)) {
+        while (n < (prefixLength)) {
           testLetter = playerNewPrefix.charAt(n);
           if (Character.isLetter(testLetter) || Character.isDigit(testLetter) || (testLetter == '&'))
           {
