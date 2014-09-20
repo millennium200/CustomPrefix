@@ -85,7 +85,8 @@ public class Main extends JavaPlugin
         /** Check for racist / staff / inappropriate words */
         /** This code vvv is not working.  Need to find a new way to check */
 
-        //TODO Add an array check if the string contains any of the words there
+        /**
+         * //TODO Add an array check if the string contains any of the words there
         File file = new File("/CustomPrefix/bannedwords.txt");
 
           Scanner in = null;
@@ -100,7 +101,7 @@ public class Main extends JavaPlugin
           int i = 0;@
           SuppressWarnings("unused")
           String uselessString;
-          while ( in .hasNextLine())
+          while ( in.hasNextLine())
           {
             uselessString = in .nextLine();
             i++;
@@ -129,7 +130,7 @@ public class Main extends JavaPlugin
               i++;
               return true;
             }
-          }
+          } */
 
         /** This code is in progress to check each color used */
         /** Default color will be the &5 SWAG-VIP color */
