@@ -67,7 +67,8 @@ public class Main extends JavaPlugin {
 				
 				/** Check for racist / staff / inappropriate words */
 				//TODO Add an array check if the string contains any of the words there
-				File file = new File ("bannedwords.txt");
+				File file = new File ("/CustomPrefix/src/main/resources/bannedwords.txt");
+				if (file.exists()) {
 				Scanner in = null;
         try {
           in = new Scanner(file);
@@ -75,7 +76,8 @@ public class Main extends JavaPlugin {
           // TODO Auto-generated catch block
           e.printStackTrace();
         }
-				int i=0;  String uselessString;
+				int i=0;  @SuppressWarnings("unused")
+        String uselessString;
 				while(in.hasNextLine()){
 				  uselessString = in.nextLine();
 				  i++;
@@ -92,7 +94,7 @@ public class Main extends JavaPlugin {
 				  bannedwords[i] = in.nextLine();
 				  i++;
 				}
-				
+				}
 								
 				/** This code is in progress to check each color used */
 				/** Default color will be the &5 SWAG-VIP color */
