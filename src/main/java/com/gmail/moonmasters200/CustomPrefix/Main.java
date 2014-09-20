@@ -25,7 +25,7 @@ public class Main extends JavaPlugin {
   public boolean onCommand(CommandSender sender, Command cmd, String StringLabel, String[] args) {
 				
 		Player player = (Player) sender;
-		if (cmd.getName().equalsIgnoreCase("prefix")) {
+		if (cmd.getName().equalsIgnoreCase("prefix") && (args.length == 2)) {
 			
 			if (!(sender instanceof Player)) {
 				sender.sendMessage("Only players can set prefixes for themselves.");
@@ -37,7 +37,7 @@ public class Main extends JavaPlugin {
 				return true;
 			}
 			
-			if (args[0].equalsIgnoreCase("reset")) {
+			if (args[0].equalsIgnoreCase("reset") && (args[1].equalsIgnoreCase("confirm"))) {
 				Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "pex user " + player.getName() +
 						" prefix \"\"");
 				return true;
