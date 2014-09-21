@@ -1,9 +1,5 @@
 package com.gmail.moonmasters200.CustomPrefix;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.Scanner;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -24,7 +20,7 @@ public class Main extends JavaPlugin
   }
 
   @
-  SuppressWarnings({ "deprecation", "resource" })
+  SuppressWarnings({ "deprecation" })
   public boolean onCommand(CommandSender sender, Command cmd, String StringLabel, String[] args)
   {
 
@@ -69,7 +65,7 @@ public class Main extends JavaPlugin
          */
         int n = 0;
         char testLetter;
-        while (n < (prefixLength - 1)) {
+        while (n < (prefixLength)) {
           testLetter = playerNewPrefix.charAt(n);
           n++;
           if (Character.isLetter(testLetter) || Character.isDigit(testLetter) || (testLetter == '&'))
@@ -135,6 +131,7 @@ public class Main extends JavaPlugin
         /** This code is in progress to check each color used */
         /** Default color will be the &5 SWAG-VIP color */
         /** Not allowed colors include red and pink, &k formatting isn't allowed either */
+        
         int locationAmpersand;
         int lastLocation = 0;
         locationAmpersand = playerNewPrefix.indexOf('&');
@@ -157,6 +154,7 @@ public class Main extends JavaPlugin
           }
           lastLocation = locationAmpersand;
         }
+        
 
         Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + player.getName() +
           " prefix " + "\"&8&l[&5&l" + playerNewPrefix + "&8&l] &5&l\"");
