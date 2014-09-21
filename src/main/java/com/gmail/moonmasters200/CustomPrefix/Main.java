@@ -137,6 +137,15 @@ public class Main extends JavaPlugin
         locationAmpersand = playerNewPrefix.indexOf('&');
         int locationColor = locationAmpersand + 1;
         char color = playerNewPrefix.charAt(locationColor);
+        if (color == 'd' || color == '4' || color == 'c')
+        {
+          player.sendMessage("You can't use that color.");
+          return true;
+        } else if (color == 'k' )
+        {
+          player.sendMessage("You can't format your prefix like that.");
+          return true;
+        }
         while (!(locationAmpersand == -1))
         {
           locationAmpersand = playerNewPrefix.indexOf('&', lastLocation);
@@ -146,8 +155,7 @@ public class Main extends JavaPlugin
           {
             player.sendMessage("You can't use that color.");
             return true;
-          }
-          if (color == 'k')
+          } else if (color == 'k')
           {
             player.sendMessage("You can't format your prefix like that.");
             return true;
