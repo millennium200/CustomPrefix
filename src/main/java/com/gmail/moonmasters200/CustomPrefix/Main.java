@@ -136,6 +136,11 @@ public class Main extends JavaPlugin
         int lastLocation = 0;
         locationAmpersand = playerNewPrefix.indexOf('&');
         int locationColor = locationAmpersand + 1;
+        if (locationColor > prefixLength)
+        {
+          player.sendMessage("You have to specify a color with a letter after the '&'");
+          return true;
+        }
         char color = playerNewPrefix.charAt(locationColor);
         if (color == 'd' || color == '4' || color == 'c')
         {
@@ -150,6 +155,11 @@ public class Main extends JavaPlugin
         {
           locationAmpersand = playerNewPrefix.indexOf('&', lastLocation);
           locationColor = locationAmpersand + 1;
+          if (locationColor > prefixLength)
+          {
+            player.sendMessage("You have to specify a color with a letter after the '&'");
+            return true;
+          }
           color = playerNewPrefix.charAt(locationColor);
           if (color == 'd' || color == '4' || color == 'c')
           {
@@ -162,7 +172,6 @@ public class Main extends JavaPlugin
           }
           lastLocation = locationAmpersand;
         }
-        
 
         Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + player.getName() +
           " prefix " + "\"&8&l[&5&l" + playerNewPrefix + "&8&l] &5&l\"");
