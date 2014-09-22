@@ -136,7 +136,7 @@ public class Main extends JavaPlugin
         int lastLocation = 0;
         locationAmpersand = playerNewPrefix.indexOf('&');
         int locationColor = locationAmpersand + 1;
-        if (locationColor > prefixLength -1) // Subtract 1 from that, because char.At of the first char of a string is 0.
+        if (locationColor > (prefixLength -1)) // Subtract 1 from that, because char.At of the first char of a string is 0.
         {
           player.sendMessage("You have to specify a color with a letter after the '&'");
           return true;
@@ -155,7 +155,7 @@ public class Main extends JavaPlugin
         {
           locationAmpersand = playerNewPrefix.indexOf('&', lastLocation);
           locationColor = locationAmpersand + 1;
-          if (locationColor > prefixLength)
+          if (locationColor > (prefixLength - 1)) // Subtracting 1 again, same reason as above
           {
             player.sendMessage("You have to specify a color with a letter after the '&'");
             return true;
