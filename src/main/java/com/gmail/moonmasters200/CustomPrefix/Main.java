@@ -134,24 +134,31 @@ public class Main extends JavaPlugin
         
         int locationAmpersand;
         int lastLocation = 0;
+        int locationColor
         locationAmpersand = playerNewPrefix.indexOf('&');
         lastLocation = locationAmpersand;
-        int locationColor = locationAmpersand + 1;
-        if (locationColor > (prefixLength -1)) // Subtract 1 from that, because char.At of the first char of a string is 0.
+        /** This is put in an if statement to prevent bugs in case there isn't an & in the prefix. */
+        /** charAt() would make bugs if there wasn't a char there. */
+        if (!(lastLocation == -1))
         {
-          player.sendMessage("You have to specify a color with a letter after the '&'");
-          return true;
+          locationColor = locationAmpersand + 1;
+          if (locationColor > (prefixLength - 1))
+          {
+            player.sendMessage("You have to specify a color with a letter after the '&'");
+            return true;
+          }
+          char color = playerNewPrefix.charAt(locationColor);
+          if  (color == 'd' || color == '4' || color == 'c')
+          {
+            player.sendMessage("You can't use that color.");
+            return true;
+          }
+          else if (color == 'k')
+          {
+            player.sendMessage("You can't format your prefix like that.");
+          }
         }
-        char color = playerNewPrefix.charAt(locationColor);
-        if (color == 'd' || color == '4' || color == 'c')
-        {
-          player.sendMessage("You can't use that color.");
-          return true;
-        } else if (color == 'k' )
-        {
-          player.sendMessage("You can't format your prefix like that.");
-          return true;
-        }
+        
         while (!(lastLocation == -1))
         {
           locationAmpersand = playerNewPrefix.indexOf('&', lastLocation);
