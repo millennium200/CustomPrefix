@@ -132,11 +132,14 @@ public class Main extends JavaPlugin
         /** Default color will be the &5 SWAG-VIP color */
         /** Not allowed colors include red and pink, &k formatting isn't allowed either */
         
+        // Create variables for testing
         int locationAmpersand;
         int lastLocation = 0;
-        int locationColor
+        int locationColor;
+        char color;
         locationAmpersand = playerNewPrefix.indexOf('&');
         lastLocation = locationAmpersand;
+        
         /** This is put in an if statement to prevent bugs in case there isn't an & in the prefix. */
         /** charAt() would make bugs if there wasn't a char there. */
         if (!(lastLocation == -1))
@@ -147,7 +150,7 @@ public class Main extends JavaPlugin
             player.sendMessage("You have to specify a color with a letter after the '&'");
             return true;
           }
-          char color = playerNewPrefix.charAt(locationColor);
+          color = playerNewPrefix.charAt(locationColor);
           if  (color == 'd' || color == '4' || color == 'c')
           {
             player.sendMessage("You can't use that color.");
@@ -159,11 +162,12 @@ public class Main extends JavaPlugin
           }
         }
         
+        /** Loop to look for all &'s in the prefix and check what colors are used */
         while (!(lastLocation == -1))
         {
           locationAmpersand = playerNewPrefix.indexOf('&', lastLocation);
           locationColor = locationAmpersand + 1;
-          if (locationAmpersand = -1) {
+          if (locationAmpersand == -1) {
             break;
           }
           if (locationColor > (prefixLength - 1)) // Subtracting 1 again, same reason as above
