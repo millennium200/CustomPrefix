@@ -146,7 +146,7 @@ public class Main extends JavaPlugin
         /** Loop to check that &4, &d, and &k aren't used in prefix */
         int i=0; // This is used in the loop below
         String[] prefixArray = new String[prefixLength];
-        while(i < prefixLength - 1)
+        while(i < prefixLength)
         {
           if (playerNewPrefix.charAt(i) == '&')
           {
@@ -165,7 +165,22 @@ public class Main extends JavaPlugin
           }
           else if ((playerNewPrefix.charAt(i) != '&') && (playerNewPrefix.charAt(i-1) !='&'))
           {
-            /** This sets up a system so that we */
+            /** This sets up a system so that we can bannedwords */
+            /** This following if statement is very necessary, because
+             *  without it, there would be an error from trying to get the char before
+             *  the prefix started. ie. prefix = prefix, looking for a value before p.
+             */
+            if ((i == 0))
+            {
+              prefixArray[i] = Character.toString(playerNewPrefix.charAt(i));
+            }
+            else
+            {
+              if (playerNewPrefix.charAt(i-1) != '&')
+              {
+                prefixArray[i] = Character.toString(playerNewPrefix.charAt(i));
+              }
+            }
             prefixArray[i] = Character.toString(playerNewPrefix.charAt(i));
           }
           i++;
