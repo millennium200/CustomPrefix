@@ -133,61 +133,57 @@ public class Main extends JavaPlugin
         /** Not allowed colors include red and pink, &k formatting isn't allowed either */
         
         // Create variables for testing
-        int locationAmpersand;
-        int lastLocation = 0;
         int locationColor;
         char color;
-        locationAmpersand = playerNewPrefix.indexOf('&');
-        lastLocation = locationAmpersand;
-        
-        /** This is put in an if statement to prevent bugs in case there isn't an & in the prefix. */
-        /** charAt() would make bugs if there wasn't a char there. */
-        if (!(lastLocation == -1))
+        /** This code does various checks on color */
+        char lastLetter = playerNewPrefix.charAt(prefixLength - 1);
+        if (lastLetter == '&')
         {
-          locationColor = locationAmpersand + 1;
-          if (locationColor > (prefixLength - 1))
-          {
-            player.sendMessage("You have to specify a color with a letter after the '&'");
-            return true;
-          }
-          color = playerNewPrefix.charAt(locationColor);
-          if  (color == 'd' || color == '4' || color == 'c')
-          {
-            player.sendMessage("You can't use that color.");
-            return true;
-          }
-          else if (color == 'k')
-          {
-            player.sendMessage("You can't format your prefix like that.");
-          }
+          player.sendMessage("You have to specify a color with a letter after the '&'");
+          return true;
         }
         
-        /** Loop to look for all &'s in the prefix and check what colors are used */
-        while (!(lastLocation == -1))
+        /** Loop to check that &4, &d, and &k aren't used in prefix */
+        int i=0; // This is used in the loop below
+        String[] prefixArray = new String[prefixLength];
+        while(i < prefixLength - 1)
         {
-          locationAmpersand = playerNewPrefix.indexOf('&', lastLocation);
-          locationColor = locationAmpersand + 1;
-          if (locationAmpersand == -1) {
-            break;
-          }
-          if (locationColor > (prefixLength - 1)) // Subtracting 1 again, same reason as above
+          if (playerNewPrefix.charAt(i) == '&')
           {
-            player.sendMessage("You have to specify a color with a letter after the '&'");
-            return true;
+            /** In this if statement, we inspect the '&''s */
+            locationColor = i;
+            color = playerNewPrefix.charAt(locationColor);
+            if (color == 'd' || color == '4' || color == 'c')
+            {
+              player.sendMessage("You can't use that color.");
+              return true;
+            } else if (color == 'k')
+            {
+              player.sendMessage("You can't format your prefix like that.");
+              return true;
+            }
           }
-          color = playerNewPrefix.charAt(locationColor);
-          if (color == 'd' || color == '4' || color == 'c')
+          else if ((playerNewPrefix.charAt(i) != '&') && (playerNewPrefix.charAt(i-1) !='&'))
           {
-            player.sendMessage("You can't use that color.");
-            return true;
-          } else if (color == 'k')
-          {
-            player.sendMessage("You can't format your prefix like that.");
-            return true;
+            /** This sets up a system so that we */
+            prefixArray[i] = Character.toString(playerNewPrefix.charAt(i));
           }
-          lastLocation = locationAmpersand;
+          i++;
         }
-
+        
+        /** Below that, we should do tests to see staff prefixes, racist / derogatory prefixes
+         *  inappropriate prefixes, etc.  A config would work best to add more.
+         */
+        StringBuilder modifiedString = new StringBuilder();
+        for(i = 0; i < prefixArray.length; i++)
+        {
+          modifiedString.append(prefixArray[i]);
+        }
+        String prefixWithoutAmpersands = modifiedString.toString();
+        // The below is just a placeholder.
+        player.sendMessage("Your prefix without ampersands is: " + prefixWithoutAmpersands);
+        
+        
         Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + player.getName() +
           " prefix " + "\"&8&l[&5&l" + playerNewPrefix + "&8&l] &5&l\"");
         player.sendMessage(this.prefix + ChatColor.GREEN + "You set your prefix to " + ChatColor.RESET + ChatColor.BOLD + playerNewPrefix);
