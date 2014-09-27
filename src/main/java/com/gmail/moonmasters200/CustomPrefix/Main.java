@@ -151,7 +151,7 @@ public class Main extends JavaPlugin
           if (playerNewPrefix.charAt(i) == '&')
           {
             /** In this if statement, we inspect the '&''s */
-            locationColor = i;
+            locationColor = i+1;
             color = playerNewPrefix.charAt(locationColor);
             if (color == 'd' || color == '4' || color == 'c')
             {
@@ -192,6 +192,10 @@ public class Main extends JavaPlugin
         StringBuilder modifiedString = new StringBuilder();
         for(i = 0; i < prefixArray.length; i++)
         {
+          if(prefixArray[i].equalsIgnoreCase(null))
+          {
+            continue;
+          }
           modifiedString.append(prefixArray[i]);
         }
         String prefixWithoutAmpersands = modifiedString.toString();
