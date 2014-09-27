@@ -163,7 +163,7 @@ public class Main extends JavaPlugin
               return true;
             }
           }
-          else if ((playerNewPrefix.charAt(i) != '&') && (playerNewPrefix.charAt(i-1) !='&'))
+          else if (playerNewPrefix.charAt(i) != '&')
           {
             /** This sets up a system so that we can bannedwords */
             /** This following if statement is very necessary, because
