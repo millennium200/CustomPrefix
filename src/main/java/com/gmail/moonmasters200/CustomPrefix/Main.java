@@ -53,7 +53,7 @@ public class Main extends JavaPlugin
         
         int prefixLength = playerNewPrefix.length();
         
-        if (prefixLength > 8)
+        if (prefixLength > 14)
         {
           player.sendMessage(ChatColor.RED + "[WARNING:] " + ChatColor.AQUA + "Your prefix is too long.");
           return true;
@@ -151,9 +151,18 @@ public class Main extends JavaPlugin
         // The below is just a placeholder.
         player.sendMessage("Your prefix without ampersands is: " + prefixWithoutAmpersands);
         
-        String[] bannedWords = (String[]) getConfig().getStringList("bannedwords").toArray();
+        String[] bannedWords = getConfig().getStringList("bannedwords").toArray(new
+            String[getConfig().getStringList("bannedwords").size()]);
+        //String[] bannedWords = (String[]) getConfig().getStringList("bannedwords").toArray();
         String prefixLowerCase = prefixWithoutAmpersands.toLowerCase();
         player.sendMessage("Your prefix in lowercase is: " + prefixLowerCase);
+        
+        /** This is different from the check way above, because this does not include &'s. */
+        if (prefixWithoutAmpersands.length() > getConfig().getInt("maxPrefixLength"))
+        {
+          player.sendMessage(ChatColor.RED + "[WARNING:] " + ChatColor.AQUA + "Your prefix is too long.");
+          return true;
+        }
         
         i = 0;
         while (i < bannedWords.length)
@@ -204,9 +213,18 @@ public class Main extends JavaPlugin
     }
     else if (cmd.getName().equalsIgnoreCase("prefixconfigreload"))
     {
+      if(sender instanceof Player)
+      {
+        Player player = (Player) sender;
+        if (!player.hasPermission("millenium.prefix.reload"))
+        {
+          player.sendMessage("You don't have enough swag.");
+          return true;
+        }
+      }
       this.reloadConfig();
+      return true;
     }
-
     return false;
 
   }

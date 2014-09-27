@@ -1,6 +1,6 @@
 name: CustomPrefix
 main: com.gmail.moonmasters200.CustomPrefix.Main
-version: 0.0.23
+version: 0.0.24
 author: millenium200 & moppletop
 commands:
   prefix:
@@ -18,11 +18,20 @@ commands:
     usage: /<command>
     permission: millenium.prefix.use
     permission-message: You don't have enough swag.
+  prefixconfigreload:
+    description: This command reloads the config.yml
+    usage: /<command>
+    premission: millenium.prefix.reload
+    permission-message: You don't have enough swag to reload.
 permissions:
     millenium.*:
         description: Gives access to all millenium perms
         children:
             millenium.prefix.use: true
+            millenium.prefix.reload: true
     millenium.prefix.use:
         description: Allows you to use the command
         default: false
+    millenium.prefix.reload:
+        description: Allows you to reload the config
+        default: op

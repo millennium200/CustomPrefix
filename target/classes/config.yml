@@ -21,3 +21,8 @@ bannedwords:
 # Test the symbol before you use it in this plugin.
 startingBracket: &8&l[&5&l
 closingBracket: &8&l] &5&l
+
+# This is the maximum length of the prefix.  Note, this does
+# not include &'s.  The maximum length of the prefix and the
+# &'s is 14.
+maxPrefixLength: 8
