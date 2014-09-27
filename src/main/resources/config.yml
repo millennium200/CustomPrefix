@@ -1,0 +1,23 @@
+############################################################
+# +------------------------------------------------------+ #
+# |             CustomPrefix Config File                  | #
+# +------------------------------------------------------+ #
+############################################################
+
+# Configuration file for CustomPrefix
+# Plugin developed by millenium200
+
+# Here, you can add words to be blocked in
+# the prefixes.
+
+bannedwords:
+  - test1
+  - test2
+  - yolo
+
+# Here, you can set the starting and closing brackets.
+# By default, they are &8&l]&5&l and &8&l] &5&l
+# Make sure to use a color code after &'s for the brackets
+# Test the symbol before you use it in this plugin.
+startingBracket: &8&l[&5&l
+closingBracket: &8&l] &5&l

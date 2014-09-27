@@ -15,18 +15,17 @@ public class Main extends JavaPlugin
 
   public void onEnable()
   {
-    //getConfig().options.copyDefaults(true);
-    //saveConfig();
+    getConfig().options().copyDefaults(true);
+    saveConfig();
   }
 
-  @
-  SuppressWarnings({ "deprecation" })
+  @ SuppressWarnings({ "deprecation" })
   public boolean onCommand(CommandSender sender, Command cmd, String StringLabel, String[] args)
   {
 
     if (cmd.getName().equalsIgnoreCase("prefix") && (args.length == 2))
     {
-
+      
       if (!(sender instanceof Player))
       {
         sender.sendMessage("Only players can set prefixes for themselves.");
@@ -34,26 +33,26 @@ public class Main extends JavaPlugin
       }
       
       Player player = (Player) sender;
-
+      
       if (!player.hasPermission("millenium.prefix.use"))
       {
         player.sendMessage("You don't have enough swag.");
         return true;
       }
-
+      
       if (args[0].equalsIgnoreCase("set"))
       {
-
+        
         /**
          * Here, we'll do many different checks on the prefix, a user is trying to use.
          * Some things we'll check for include: length, staff tags, racist tags,
          * staff colors, and bad symbols that don't work in prefixes.
          */
-
+        
         String playerNewPrefix = args[1];
-
+        
         int prefixLength = playerNewPrefix.length();
-
+        
         if (prefixLength > 8)
         {
           player.sendMessage(ChatColor.RED + "[WARNING:] " + ChatColor.AQUA + "Your prefix is too long.");
@@ -77,57 +76,7 @@ public class Main extends JavaPlugin
             return true;
           }
         }
-
-        /** Check for racist / staff / inappropriate words */
-        /** This code vvv is not working.  Need to find a new way to check */
-
-        /**
-         * //TODO Add an array check if the string contains any of the words there
-        File file = new File("/CustomPrefix/bannedwords.txt");
-
-          Scanner in = null;
-          try
-          { in = new Scanner(file);
-          }
-          catch (FileNotFoundException e)
-          {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-          }
-          int i = 0;@
-          SuppressWarnings("unused")
-          String uselessString;
-          while ( in.hasNextLine())
-          {
-            uselessString = in .nextLine();
-            i++;
-          }
-          int arrayLength = i;
-
-          i = 0;
-          String bannedwords[] = new String[arrayLength];
-          bannedwords[0] = "admin"; // Set that in the first slot as a test
-          while ( in .hasNextLine())
-          {
-            // Retrieves words from the bannedwords.txt file and puts them in
-            // array: bannedwords.
-            bannedwords[i] = in .nextLine();
-            i++;
-          }
-
-          i = 0;
-          String prefixLowerCase = playerNewPrefix.toLowerCase();
-          while (i < arrayLength)
-          {
-            if (prefixLowerCase.contains(bannedwords[i]))
-            {
-              player.sendMessage("You cannot use \"" + ChatColor.RED + ChatColor.ITALIC + ChatColor.BOLD +
-                "" + bannedwords[i] + ChatColor.RESET + "\" in your prefix.");
-              i++;
-              return true;
-            }
-          } */
-
+        
         /** This code is in progress to check each color used */
         /** Default color will be the &5 SWAG-VIP color */
         /** Not allowed colors include red and pink, &k formatting isn't allowed either */
@@ -202,9 +151,27 @@ public class Main extends JavaPlugin
         // The below is just a placeholder.
         player.sendMessage("Your prefix without ampersands is: " + prefixWithoutAmpersands);
         
+        String[] bannedWords = (String[]) getConfig().getStringList("bannedwords").toArray();
+        String prefixLowerCase = prefixWithoutAmpersands.toLowerCase();
+        player.sendMessage("Your prefix in lowercase is: " + prefixLowerCase);
+        
+        i = 0;
+        while (i < bannedWords.length)
+        {
+          if (prefixLowerCase.contains(bannedWords[i]))
+          {
+            player.sendMessage("You cannot use \"" + ChatColor.RED + ChatColor.ITALIC + ChatColor.BOLD +
+                "" + bannedWords[i] + ChatColor.RESET + "\" in your prefix.");
+            return true;
+          }
+          i++;
+        }
+        
+        String startingBracket = getConfig().getString("startingBracket");
+        String closingBracket = getConfig().getString("closingBracket");
         
         Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + player.getName() +
-          " prefix " + "\"&8&l[&5&l" + playerNewPrefix + "&8&l] &5&l\"");
+          " prefix " + "\"" + startingBracket + playerNewPrefix + closingBracket + "\"");
         player.sendMessage(this.prefix + ChatColor.GREEN + "You set your prefix to " + ChatColor.RESET + ChatColor.BOLD + playerNewPrefix);
 
         for (Player p: Bukkit.getOnlinePlayers())
@@ -235,9 +202,12 @@ public class Main extends JavaPlugin
       player.sendMessage(ChatColor.BOLD + "You have reset your prefix!");
       return true;
     }
+    else if (cmd.getName().equalsIgnoreCase("prefixconfigreload"))
+    {
+      this.reloadConfig();
+    }
 
     return false;
 
   }
-
 }
