@@ -18,7 +18,7 @@ public class Main extends JavaPlugin
 
   public void onEnable()
   {
-    initializeConfig(); // Initialize the config.
+    this.saveDefaultConfig();
   }
   
   public void initializeConfig()
@@ -162,7 +162,7 @@ public class Main extends JavaPlugin
         StringBuilder modifiedString = new StringBuilder();
         for(i = 0; i < prefixArray.length; i++)
         {
-          if(prefixArray[i].equalsIgnoreCase(null))
+          if(prefixArray[i].equalsIgnoreCase("null"))
           {
             continue;
           }
@@ -197,8 +197,9 @@ public class Main extends JavaPlugin
           i++;
         }
         
-        String startingBracket = getConfig().getString("startingBracket");
-        String closingBracket = getConfig().getString("closingBracket");
+        /** Can't store &'s in the config.yml, so setting them here for now */
+        String startingBracket = "&8&l[&5&l"; // getConfig().getString("startingBracket");
+        String closingBracket = "&8&l] &5&l"; // getConfig().getString("closingBracket");
         
         Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + player.getName() +
           " prefix " + "\"" + startingBracket + playerNewPrefix + closingBracket + "\"");
