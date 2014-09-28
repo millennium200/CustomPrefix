@@ -21,25 +21,6 @@ public class Main extends JavaPlugin
     this.saveDefaultConfig();
   }
   
-  public void initializeConfig()
-  {
-    FileConfiguration config = getConfig();  // Just a little variable to make the code more readable
-    
-    // config.addDefault method
-    // first argument = Parth to the variable, with a . representing sub paths
-    // second argument = the default value to be added when creating the config
-    
-    config.addDefault("Path.Sub.String", "String"); // Creating a default string
-    
-    // Creates the default list
-    String[] bannedwords = {"test1", "test2", "yolo"};
-    config.addDefault("bannedwords", Arrays.asList(bannedwords));
-    
-    /** If true (below), the values will be added to the config if they are not already there */
-    config.options().copyDefaults();
-    saveConfig(); // Method which creates our config, which is blank at the moment
-  }
-
   @ SuppressWarnings({ "deprecation" })
   public boolean onCommand(CommandSender sender, Command cmd, String StringLabel, String[] args)
   {
@@ -189,6 +170,8 @@ public class Main extends JavaPlugin
           return true;
         }
         
+        /** This checks if the prefixLowerCase (without ampersands) contains any bannedwords */
+        /** Set bannedwords in the config.yml */
         i = 0;
         while (i < bannedWords.length)
         {
@@ -205,10 +188,21 @@ public class Main extends JavaPlugin
         String startingBracket = "&8&l[&5&l"; // getConfig().getString("startingBracket");
         String closingBracket = "&8&l] &5&l"; // getConfig().getString("closingBracket");
         
+        /** This sends the command through PermissionsEX to set the prefix */
         Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + player.getName() +
           " prefix " + "\"" + startingBracket + playerNewPrefix + closingBracket + "\"");
         player.sendMessage(this.prefix + ChatColor.GREEN + "You set your prefix to " + ChatColor.RESET + ChatColor.BOLD + playerNewPrefix);
-
+        
+        /** This sets the prefix someone set inside of the config file to check for abuse */
+        getConfig().set("prefixes." + player.getName(), prefixWithoutAmpersands);
+        
+        /** This sends a message to who you specify a message regarding prefixes. */
+        /** Default is millenium200, specify this in config.yml */
+        String sendPrefixesTo = getConfig().getString("sendPrefixesTo");
+        Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "mail send " + sendPrefixesTo + " Player, " + 
+            player.getName() + " has set their prefix to " + prefixWithoutAmpersands + ".");
+        
+        /** This broadcasts to the server, that someone set their prefix */
         for (Player p: Bukkit.getOnlinePlayers())
         {
           p.sendMessage(ChatColor.GOLD + "[Swag-Prefixes]" + ChatColor.AQUA + " " + player.getName() + " has set their " + ChatColor.BOLD + "prefix" + ChatColor.AQUA + " using /prefix!");
