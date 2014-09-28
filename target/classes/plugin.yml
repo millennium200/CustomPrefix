@@ -1,6 +1,6 @@
 name: CustomPrefix
 main: com.gmail.moonmasters200.CustomPrefix.Main
-version: 0.0.29
+version: 0.0.30
 author: millenium200 & moppletop
 commands:
   prefix:

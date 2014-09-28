@@ -1,12 +1,9 @@
 package com.gmail.moonmasters200.CustomPrefix;
 
-import java.util.Arrays;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -195,6 +192,7 @@ public class Main extends JavaPlugin
         
         /** This sets the prefix someone set inside of the config file to check for abuse */
         getConfig().set("prefixes." + player.getName(), prefixWithoutAmpersands);
+        saveConfig();
         
         /** This sends a message to who you specify a message regarding prefixes. */
         /** Default is millenium200, specify this in config.yml */
@@ -217,18 +215,24 @@ public class Main extends JavaPlugin
         sender.sendMessage("Only players can reset prefixes.");
         return true;
       }
-
+      
       Player player = (Player) sender;
-
+      
       if (!player.hasPermission("millenium.prefix.use"))
       {
         player.sendMessage("You don't have enough swag.");
         return true;
       }
-
+      
+      /** This sends a command through PermissionsEX to reset their prefix */
       Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "pex user " + player.getName() +
         " prefix \"\"");
       player.sendMessage(ChatColor.BOLD + "You have reset your prefix!");
+      
+      /** This sets the prefix stored for someone to "prefixwasreset" */
+      getConfig().set("prefixes." + player.getName(), "prefixwasreset");
+      saveConfig();
+      
       return true;
     }
     else if (cmd.getName().equalsIgnoreCase("prefixconfigreload"))
