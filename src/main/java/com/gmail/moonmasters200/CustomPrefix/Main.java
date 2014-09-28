@@ -156,7 +156,6 @@ public class Main extends JavaPlugin
                 prefixArray[i] = "null";
               }
             }
-            prefixArray[i] = Character.toString(playerNewPrefix.charAt(i));
           }
           i++;
         }
