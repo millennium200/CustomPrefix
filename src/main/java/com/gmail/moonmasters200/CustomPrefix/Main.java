@@ -132,6 +132,7 @@ public class Main extends JavaPlugin
               player.sendMessage("You can't format your prefix like that.");
               return true;
             }
+            prefixArray[i] = "null";
           }
           else if (playerNewPrefix.charAt(i) != '&')
           {
@@ -149,6 +150,10 @@ public class Main extends JavaPlugin
               if (playerNewPrefix.charAt(i-1) != '&')
               {
                 prefixArray[i] = Character.toString(playerNewPrefix.charAt(i));
+              }
+              else
+              {
+                prefixArray[i] = "null";
               }
             }
             prefixArray[i] = Character.toString(playerNewPrefix.charAt(i));
