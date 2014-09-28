@@ -1,9 +1,12 @@
 package com.gmail.moonmasters200.CustomPrefix;
 
+import java.util.Arrays;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -15,8 +18,26 @@ public class Main extends JavaPlugin
 
   public void onEnable()
   {
-    getConfig().options().copyDefaults(true);
-    saveConfig();
+    initializeConfig(); // Initialize the config.
+  }
+  
+  public void initializeConfig()
+  {
+    FileConfiguration config = getConfig();  // Just a little variable to make the code more readable
+    
+    // config.addDefault method
+    // first argument = Parth to the variable, with a . representing sub paths
+    // second argument = the default value to be added when creating the config
+    
+    config.addDefault("Path.Sub.String", "String"); // Creating a default string
+    
+    // Creates the default list
+    String[] bannedwords = {"test1", "test2", "yolo"};
+    config.addDefault("bannedwords", Arrays.asList(bannedwords));
+    
+    /** If true (below), the values will be added to the config if they are not already there */
+    config.options().copyDefaults();
+    saveConfig(); // Method which creates our config, which is blank at the moment
   }
 
   @ SuppressWarnings({ "deprecation" })
