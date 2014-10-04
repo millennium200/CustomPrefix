@@ -247,6 +247,7 @@ public class Main extends JavaPlugin
         }
       }
       this.reloadConfig();
+      sender.sendMessage("CustomPrefix configuration reloaded.");
       return true;
     }
     return false;
