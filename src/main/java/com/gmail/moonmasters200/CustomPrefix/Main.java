@@ -92,9 +92,8 @@ public class Main extends JavaPlugin
         }
         
         /** Loop to check that &4, &d, and &k aren't used in prefix */
-        int i=0; // This is used in the loop below
         String[] prefixArray = new String[prefixLength];
-        while(i < prefixLength)
+        for(int i = 0; i < prefixLength; i++)
         {
           if (playerNewPrefix.charAt(i) == '&')
           {
@@ -135,7 +134,6 @@ public class Main extends JavaPlugin
               }
             }
           }
-          i++;
         }
         
         /** Below that, we should do tests to see staff prefixes, racist / derogatory prefixes
@@ -169,8 +167,7 @@ public class Main extends JavaPlugin
         
         /** This checks if the prefixLowerCase (without ampersands) contains any bannedwords */
         /** Set bannedwords in the config.yml */
-        i = 0;
-        while (i < bannedWords.length)
+        for(int i = 0; size < bannedWords.length;size++)
         {
           if (prefixLowerCase.contains(bannedWords[i]))
           {
@@ -178,7 +175,6 @@ public class Main extends JavaPlugin
                 "" + bannedWords[i] + ChatColor.RESET + "\" in your prefix.");
             return true;
           }
-          i++;
         }
         
         /** Can't store &'s in the config.yml, so setting them here for now */
