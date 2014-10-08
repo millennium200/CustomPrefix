@@ -82,6 +82,9 @@ maxPrefixLength: 8
 # is millenium200 (dev).
 sendPrefixesTo: millenium200
 
+startingBracket: '&8&l[&5&l'
+closingBracket: '&8&l] &5&l'
+
 # Do not edit this.  Here, player prefixes will be stored.  Once
 # they set them, you can check them for abuse here.  Also, note, 
 # this section does not store prefix colors, just the words.

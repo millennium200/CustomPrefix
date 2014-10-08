@@ -177,9 +177,10 @@ public class Main extends JavaPlugin
           }
         }
         
+        /** testing */
         /** Can't store &'s in the config.yml, so setting them here for now */
-        String startingBracket = "&8&l[&5&l"; // getConfig().getString("startingBracket");
-        String closingBracket = "&8&l] &5&l"; // getConfig().getString("closingBracket");
+        String startingBracket = getConfig().getString("startingBracket");//"&8&l[&5&l"; // 
+        String closingBracket = getConfig().getString("closingBracket");//"&8&l] &5&l"; // 
         
         /** This sends the command through PermissionsEX to set the prefix */
         Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + player.getName() +
