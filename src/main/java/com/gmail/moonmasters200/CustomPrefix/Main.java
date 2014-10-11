@@ -181,7 +181,7 @@ public class Main extends JavaPlugin
         /** Can't store &'s in the config.yml, so setting them here for now */
         String startingBracket = getConfig().getString("startingBracket");//"&8&l[&5&l"; // 
         String closingBracket = getConfig().getString("closingBracket");//"&8&l] &5&l"; // 
-        
+                
         /** This sends the command through PermissionsEX to set the prefix */
         Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " + player.getName() +
           " prefix " + "\"" + startingBracket + playerNewPrefix + closingBracket + "\"");
