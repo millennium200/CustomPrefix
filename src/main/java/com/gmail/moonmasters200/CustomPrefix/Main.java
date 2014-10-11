@@ -140,7 +140,7 @@ public class Main extends JavaPlugin
          *  inappropriate prefixes, etc.  A config would work best to add more.
          */
         StringBuilder modifiedString = new StringBuilder();
-        for(i = 0; i < prefixArray.length; i++)
+        for(int i = 0; i < prefixArray.length; i++)
         {
           if(prefixArray[i].equalsIgnoreCase("null"))
           {
@@ -167,7 +167,7 @@ public class Main extends JavaPlugin
         
         /** This checks if the prefixLowerCase (without ampersands) contains any bannedwords */
         /** Set bannedwords in the config.yml */
-        for(int i = 0; size < bannedWords.length;size++)
+        for(int i = 0; size < bannedWords.length; size++)
         {
           if (prefixLowerCase.contains(bannedWords[i]))
           {
@@ -198,10 +198,9 @@ public class Main extends JavaPlugin
             player.getName() + " has set their prefix to " + prefixWithoutAmpersands + ".");
         
         /** This broadcasts to the server, that someone set their prefix */
-        for (Player p: Bukkit.getOnlinePlayers())
-        {
-          p.sendMessage(ChatColor.GOLD + "[Swag-Prefixes]" + ChatColor.AQUA + " " + player.getName() + " has set their " + ChatColor.BOLD + "prefix" + ChatColor.AQUA + " using /prefix!");
-        }
+        Bukkit.broadcastMessage(ChatColor.GOLD + "[Swag-Prefixes]" + ChatColor.AQUA + 
+            " " + player.getName() + " has set their " + ChatColor.BOLD + "prefix" + 
+            ChatColor.AQUA + " using /prefix!");
         return true;
       }
     }
