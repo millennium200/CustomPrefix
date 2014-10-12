@@ -11,7 +11,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class Main extends JavaPlugin {
   
   String announcePrefix = "" + ChatColor.DARK_GRAY + "[" + ChatColor.BLUE + ChatColor.BOLD +
-      "CustomPrefix" + ChatColor.DARK_GRAY + "]" + ChatColor.RESET + "";
+      "CustomPrefix" + ChatColor.DARK_GRAY + "]" + ChatColor.RESET + " ";
   
   public void onEnable()
   {
@@ -68,6 +68,7 @@ public class Main extends JavaPlugin {
           String playerName = player.toString();
 
           resetPrefix(playerName);
+          sender.sendMessage("Your prefix was reset.");
           return true;
         }
         return false;
@@ -90,7 +91,7 @@ public class Main extends JavaPlugin {
           }
           String playerName = args[1].toString();
           // If not found, alert sender
-          if (getConfig().get("prefixes." + playerName).toString() == null)
+          if (getConfig().get("prefixes." + playerName).toString().isEmpty())
           {
             sender.sendMessage("Prefix not found.");
             return true;
@@ -268,7 +269,7 @@ public class Main extends JavaPlugin {
           + sendPrefixesTo + " Player, " + 
               player.getName() + " has set their prefix to " + prefixWithoutAmpersands + ".");
           Bukkit.broadcastMessage(announcePrefix + ChatColor.AQUA + 
-              " " + player.getName() + " has set their " + ChatColor.BOLD + "prefix" + 
+              "" + player.getName() + " has set their " + ChatColor.BOLD + "prefix" + 
               ChatColor.AQUA + " using /prefix!");
           return true;
         }
@@ -286,6 +287,7 @@ public class Main extends JavaPlugin {
             }
           }
           resetPrefix(playerName);
+          sender.sendMessage(announcePrefix + "Prefix reset");
           return true;
         }
         return false;
