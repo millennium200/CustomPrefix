@@ -3,9 +3,8 @@ package com.gmail.moonmasters200.CustomPrefix;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 
-public class SetAndReset extends JavaPlugin {
+public class SetAndReset extends Main {
 
   public void setprefix (String playerName, String playerNewPrefix)
   {
