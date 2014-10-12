@@ -1,34 +1,32 @@
 name: CustomPrefix
 main: com.gmail.moonmasters200.CustomPrefix.Main
-version: 0.0.31
-author: millenium200 & moppletop
+version: 0.0.32
+author: millenium200
 commands:
   prefix:
     description: This command changes your prefix.
-    usage: /<command> <set> <prefix>
+    usage: /prefix [set <prefix> [username] | check <username> | reset [username] | reloadconfig]
     permission: millenium.prefix.use
     permission-message: You don't have enough swag.
-  prefixreset:
-    description: This command resets your prefix.
-    usage: /<command>
-    permission: millenium.prefix.use
-    permission-message: You don't have enough swag.
-  resetprefix:
-    description: This command resets your prefix.
-    usage: /<command>
-    permission: millenium.prefix.use
-    permission-message: You don't have enough swag.
-  prefixconfigreload:
-    description: This command reloads the config.yml
-    usage: /<command>
-    premission: millenium.prefix.reload
-    permission-message: You don't have enough swag to reload.
 permissions:
-    millenium.*:
+    millenium.prefix.*:
         description: Gives access to all millenium perms
         children:
+            millenium.prefix.admin: true
             millenium.prefix.use: true
             millenium.prefix.reload: true
+    millenium.prefix.admin:
+        description: Gives access to all admin commands of prefix
+        children:
+            millenium.prefix.resetothers: true
+            millenium.prefix.setothers: true
+            millenium.prefix.check: true
+    millenium.prefix.setothers:
+        description: Allows access to set others' prefixes
+    milenium.prefix.resetothers:
+        description: Allows access to reset others' prefixes
+    millenium.prefix.check:
+        description: Allows you to check prefixes
     millenium.prefix.use:
         description: Allows you to use the command
         default: false
