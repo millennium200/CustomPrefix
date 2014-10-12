@@ -2,7 +2,6 @@ package com.gmail.moonmasters200.CustomPrefix;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -11,7 +10,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class Main extends JavaPlugin {
   
   String announcePrefix = "" + ChatColor.DARK_GRAY + "[" + ChatColor.BLUE + ChatColor.BOLD +
-      "CustomPrefix" + ChatColor.DARK_GRAY + "]" + ChatColor.RESET + " ";
+      "CustomPrefix" + ChatColor.DARK_GRAY + "]" + ChatColor.RESET + "  ";
   
   public void onEnable()
   {
@@ -66,7 +65,7 @@ public class Main extends JavaPlugin {
             return true;
           }
           String playerName = player.toString();
-
+          
           resetPrefix(playerName);
           sender.sendMessage("Your prefix was reset.");
           return true;
@@ -482,22 +481,12 @@ public class Main extends JavaPlugin {
     else if (getServer().getPluginManager().getPlugin("GroupManager") != null)
     {
       Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "manuaddv " +
-          playerName + " prefix \"" + prefix + "\"");
+          playerName + " prefix '" + prefix + "'");
     }
     
     else
     {
-      /** Case that no plugin was found */
-      OfflinePlayer[] list = Bukkit.getOfflinePlayers();
-      for (int n = 0; n < list.length; n++) {
-        Player player = (Player) list[n];
-        if (player.hasPermission("millenium.prefix.admin"))
-        {
-          Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
-              "mail send " + player.toString() + " Permissions Plugin was not"
-                  + " found for CustomPrefix!");
-        }
-      }
+      
     }
   }
   
@@ -510,8 +499,11 @@ public class Main extends JavaPlugin {
     }
     else if (getServer().getPluginManager().getPlugin("GroupManager") != null)
     {
-      Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "manudelv " +
-          playerName + " prefix");
+      String testString = "manudelv " + playerName + " prefix";
+      Bukkit.broadcastMessage(testString);
+      Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), testString);
+      //Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "manudelv " +
+      //    playerName + " prefix");
     }
   }
   
