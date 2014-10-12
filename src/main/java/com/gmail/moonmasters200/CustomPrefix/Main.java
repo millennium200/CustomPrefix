@@ -2,6 +2,7 @@ package com.gmail.moonmasters200.CustomPrefix;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -21,7 +22,6 @@ public class Main extends JavaPlugin {
   {
     if (cmd.getName().equalsIgnoreCase("prefix"))
     {
-      SetAndReset actions = new SetAndReset();
       /** No arguments */
       if (args.length == 0)
       {
@@ -67,7 +67,7 @@ public class Main extends JavaPlugin {
           }
           String playerName = player.toString();
 
-          actions.resetprefix(playerName);
+          resetPrefix(playerName);
           return true;
         }
         return false;
@@ -253,7 +253,7 @@ public class Main extends JavaPlugin {
           /** Get variables, set prefix */
           String sendPrefixesTo = getConfig().getString("sendPrefixesTo");
           String playerName = player.getName().toString();
-          actions.setprefix(playerName, playerNewPrefix);
+          setPrefix(playerName, playerNewPrefix);
           
           /** This sets the prefix someone set inside of the config file to check for abuse */
           getConfig().set("prefixes." + player.getName(), prefixWithoutAmpersands);
@@ -285,7 +285,7 @@ public class Main extends JavaPlugin {
               return true;
             }
           }
-          actions.resetprefix(playerName);
+          resetPrefix(playerName);
           return true;
         }
         return false;
@@ -442,7 +442,7 @@ public class Main extends JavaPlugin {
           }
           /** End of checking prefix with bannedwords */
           
-          actions.setprefix(playerName, playerNewPrefix);
+          setPrefix(playerName, playerNewPrefix);
           
           /** This sets the prefix someone set inside of the config file to check for abuse */
           getConfig().set("prefixes." + playerName, prefixWithoutAmpersands);
@@ -464,4 +464,53 @@ public class Main extends JavaPlugin {
     }
     return false;
   }
+  
+  public void setPrefix (String playerName, String playerNewPrefix)
+  {
+    String startingBracket = getConfig().getString("startingBracket");
+    String closingBracket = getConfig().getString("closingBracket");
+    
+    String prefix = startingBracket + playerNewPrefix + closingBracket;
+    
+    if (getServer().getPluginManager().getPlugin("PermissionsEx") != null)
+    {
+      Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " +
+          playerName + " prefix " + "\"" + prefix + "\"");
+    }
+    else if (getServer().getPluginManager().getPlugin("GroupManager") != null)
+    {
+      Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "manuaddv " +
+          playerName + " prefix \"" + prefix + "\"");
+    }
+    
+    else
+    {
+      /** Case that no plugin was found */
+      OfflinePlayer[] list = Bukkit.getOfflinePlayers();
+      for (int n = 0; n < list.length; n++) {
+        Player player = (Player) list[n];
+        if (player.hasPermission("millenium.prefix.admin"))
+        {
+          Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),
+              "mail send " + player.toString() + " Permissions Plugin was not"
+                  + " found for CustomPrefix!");
+        }
+      }
+    }
+  }
+  
+  public void resetPrefix (String playerName)
+  {
+    if (getServer().getPluginManager().getPlugin("PermissionsEx") != null)
+    {
+      Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " +
+          playerName + " prefix \"\"");
+    }
+    else if (getServer().getPluginManager().getPlugin("GroupManager") != null)
+    {
+      Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "manudelv " +
+          playerName + " prefix");
+    }
+  }
+  
 }
