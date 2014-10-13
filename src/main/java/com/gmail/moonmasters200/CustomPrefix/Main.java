@@ -10,7 +10,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class Main extends JavaPlugin {
   
   String announcePrefix = "" + ChatColor.DARK_GRAY + "[" + ChatColor.BLUE + ChatColor.BOLD +
-      "CustomPrefix" + ChatColor.DARK_GRAY + "]" + ChatColor.RESET + "  ";
+      "CustomPrefix" + ChatColor.DARK_GRAY + "]" + ChatColor.RESET + " ";
   
   public void onEnable()
   {
@@ -64,7 +64,7 @@ public class Main extends JavaPlugin {
             player.sendMessage("You do not have enough swag.");
             return true;
           }
-          String playerName = player.toString();
+          String playerName = player.getName().toString();
           
           resetPrefix(playerName);
           sender.sendMessage("Your prefix was reset.");
@@ -89,13 +89,12 @@ public class Main extends JavaPlugin {
             }
           }
           String playerName = args[1].toString();
-          // If not found, alert sender
-          if (getConfig().get("prefixes." + playerName).toString().isEmpty())
+          if (getConfig().getString("prefixes." + playerName).isEmpty())
           {
             sender.sendMessage("Prefix not found.");
             return true;
           }
-          String playerPrefix = getConfig().get("prefixes." + playerName).toString();
+          String playerPrefix = getConfig().get("prefixes." + playerName).toString() ;
           sender.sendMessage("The prefix of " + playerName + " is " + playerPrefix);
           return true;
         }
