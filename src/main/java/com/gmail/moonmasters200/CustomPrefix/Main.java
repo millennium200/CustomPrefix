@@ -12,6 +12,7 @@ public class Main extends JavaPlugin {
   String announcePrefix = "" + ChatColor.DARK_GRAY + "[" + ChatColor.BLUE + ChatColor.BOLD +
       "CustomPrefix" + ChatColor.DARK_GRAY + "]" + ChatColor.RESET + " ";
   String noperms = ChatColor.translateAlternateColorCodes('&', "&cError: &4You don't have enough swag to do this.");
+  String warning = ChatColor.RED + "[Warning:]" + " " + ChatColor.DARK_RED + "That prefix is too long.";
   
   public void onEnable()
   {
@@ -127,8 +128,7 @@ public class Main extends JavaPlugin {
           // Prefixes need to be 14 characters or shorter
           if (prefixLength > 14)
           {
-            sender.sendMessage(ChatColor.RED + "[Warning:]"
-                + " " + ChatColor.AQUA + "That prefix is too long.");
+            sender.sendMessage(warning);
             return true;
           }
           
@@ -233,7 +233,7 @@ public class Main extends JavaPlugin {
           // the config.yml and is different from way above cause it does not include &'s
           if (prefixWithoutAmpersands.length() > getConfig().getInt("maxPrefixLength"))
           {
-            sender.sendMessage(ChatColor.RED + "[WARNING:] " + ChatColor.AQUA + "That prefix is too long.");
+            sender.sendMessage(warning);
             return true;
           }
           
@@ -320,8 +320,7 @@ public class Main extends JavaPlugin {
           // Prefixes need to be 14 characters or shorter
           if (prefixLength > 14)
           {
-            sender.sendMessage(ChatColor.RED + "[Warning:]"
-                + " " + ChatColor.AQUA + "That prefix is too long.");
+            sender.sendMessage(warning);
             return true;
           }
           
@@ -426,7 +425,7 @@ public class Main extends JavaPlugin {
           // the config.yml and is different from way above cause it does not include &'s
           if (prefixWithoutAmpersands.length() > getConfig().getInt("maxPrefixLength"))
           {
-            sender.sendMessage(ChatColor.RED + "[WARNING:] " + ChatColor.AQUA + "That prefix is too long.");
+            sender.sendMessage(warning);
             return true;
           }
           
