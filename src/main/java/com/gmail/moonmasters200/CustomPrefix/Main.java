@@ -482,11 +482,6 @@ public class Main extends JavaPlugin {
       Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "manuaddv " +
           playerName + " prefix '" + prefix + "'");
     }
-    
-    else
-    {
-      
-    }
   }
   
   public void resetPrefix (String playerName)
