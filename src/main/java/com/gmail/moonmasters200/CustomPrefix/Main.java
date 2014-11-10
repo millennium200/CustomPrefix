@@ -11,6 +11,8 @@ public class Main extends JavaPlugin {
   
   String announcePrefix = "" + ChatColor.DARK_GRAY + "[" + ChatColor.BLUE + ChatColor.BOLD +
       "CustomPrefix" + ChatColor.DARK_GRAY + "]" + ChatColor.RESET + " ";
+  String noperms = ChatColor.translateAlternateColorCodes('&', "&cError: &4You don't have enough swag to do this.");
+  String warning = ChatColor.RED + "[Warning:]" + " " + ChatColor.DARK_RED + "That prefix is too long.";
   
   public void onEnable()
   {
@@ -43,7 +45,7 @@ public class Main extends JavaPlugin {
             Player player = (Player) sender;
             if (!player.hasPermission("millenium.prefix.reload"))
             {
-              player.sendMessage("You don't have enough swag.");
+              player.sendMessage(noperms);
               return true;
             }
           }
@@ -64,7 +66,7 @@ public class Main extends JavaPlugin {
             player.sendMessage("You do not have enough swag.");
             return true;
           }
-          String playerName = player.getName().toString();
+          String playerName = player.getName();
           
           resetPrefix(playerName);
           sender.sendMessage("Your prefix was reset.");
@@ -84,7 +86,7 @@ public class Main extends JavaPlugin {
             Player player = (Player) sender;
             if (!(player.hasPermission("millenium.prefix.check")))
             {
-              player.sendMessage("You don't have enough swag");
+              player.sendMessage(noperms);
               return true;
             }
           }
@@ -113,7 +115,7 @@ public class Main extends JavaPlugin {
           // Check permissions
           if (!(player.hasPermission("millenium.prefix.use")))
           {
-            player.sendMessage("You don't have enough swag.");
+            player.sendMessage(noperms);
             return true;
           }
           
@@ -126,8 +128,7 @@ public class Main extends JavaPlugin {
           // Prefixes need to be 14 characters or shorter
           if (prefixLength > 14)
           {
-            sender.sendMessage(ChatColor.RED + "[Warning:]"
-                + " " + ChatColor.AQUA + "That prefix is too long.");
+            sender.sendMessage(warning);
             return true;
           }
           
@@ -232,7 +233,7 @@ public class Main extends JavaPlugin {
           // the config.yml and is different from way above cause it does not include &'s
           if (prefixWithoutAmpersands.length() > getConfig().getInt("maxPrefixLength"))
           {
-            sender.sendMessage(ChatColor.RED + "[WARNING:] " + ChatColor.AQUA + "That prefix is too long.");
+            sender.sendMessage(warning);
             return true;
           }
           
@@ -251,11 +252,11 @@ public class Main extends JavaPlugin {
           
           /** Get variables, set prefix */
           String sendPrefixesTo = getConfig().getString("sendPrefixesTo");
-          String playerName = player.getName().toString();
+          String playerName = player.getName();
           setPrefix(playerName, playerNewPrefix);
           
           /** This sets the prefix someone set inside of the config file to check for abuse */
-          getConfig().set("prefixes." + player.getName(), prefixWithoutAmpersands);
+          getConfig().set("prefixes." + playerName, prefixWithoutAmpersands);
           saveConfig();
           
           /** Alerts player that they set their prefix */
@@ -265,9 +266,9 @@ public class Main extends JavaPlugin {
           /** Alert chosen staff, broadcast to server */
           Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "mail send " 
           + sendPrefixesTo + " Player, " + 
-              player.getName() + " has set their prefix to " + prefixWithoutAmpersands + ".");
+              playerName + " has set their prefix to " + prefixWithoutAmpersands + ".");
           Bukkit.broadcastMessage(announcePrefix + ChatColor.AQUA + 
-              "" + player.getName() + " has set their " + ChatColor.BOLD + "prefix" + 
+              "" + playerName + " has set their " + ChatColor.BOLD + "prefix" + 
               ChatColor.AQUA + " using /prefix!");
           return true;
         }
@@ -305,7 +306,7 @@ public class Main extends JavaPlugin {
             Player player = (Player) sender;
             if (!(player.hasPermission("millenium.prefix.setothers")))
             {
-              player.sendMessage("You don't have enough swag.");
+              player.sendMessage(noperms);
               return true;
             }
           }
@@ -319,8 +320,7 @@ public class Main extends JavaPlugin {
           // Prefixes need to be 14 characters or shorter
           if (prefixLength > 14)
           {
-            sender.sendMessage(ChatColor.RED + "[Warning:]"
-                + " " + ChatColor.AQUA + "That prefix is too long.");
+            sender.sendMessage(warning);
             return true;
           }
           
@@ -425,7 +425,7 @@ public class Main extends JavaPlugin {
           // the config.yml and is different from way above cause it does not include &'s
           if (prefixWithoutAmpersands.length() > getConfig().getInt("maxPrefixLength"))
           {
-            sender.sendMessage(ChatColor.RED + "[WARNING:] " + ChatColor.AQUA + "That prefix is too long.");
+            sender.sendMessage(warning);
             return true;
           }
           
@@ -481,11 +481,6 @@ public class Main extends JavaPlugin {
     {
       Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "manuaddv " +
           playerName + " prefix '" + prefix + "'");
-    }
-    
-    else
-    {
-      
     }
   }
   
