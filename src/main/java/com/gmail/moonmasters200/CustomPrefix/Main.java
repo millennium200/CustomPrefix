@@ -11,6 +11,7 @@ public class Main extends JavaPlugin {
   
   String announcePrefix = "" + ChatColor.DARK_GRAY + "[" + ChatColor.BLUE + ChatColor.BOLD +
       "CustomPrefix" + ChatColor.DARK_GRAY + "]" + ChatColor.RESET + " ";
+  String noperms = ChatColor.translateAlternateColorCodes('&', "&cError: &4You don't have enough swag to do this.");
   
   public void onEnable()
   {
@@ -43,7 +44,7 @@ public class Main extends JavaPlugin {
             Player player = (Player) sender;
             if (!player.hasPermission("millenium.prefix.reload"))
             {
-              player.sendMessage("You don't have enough swag.");
+              player.sendMessage(noperms);
               return true;
             }
           }
@@ -84,7 +85,7 @@ public class Main extends JavaPlugin {
             Player player = (Player) sender;
             if (!(player.hasPermission("millenium.prefix.check")))
             {
-              player.sendMessage("You don't have enough swag");
+              player.sendMessage(noperms);
               return true;
             }
           }
@@ -113,7 +114,7 @@ public class Main extends JavaPlugin {
           // Check permissions
           if (!(player.hasPermission("millenium.prefix.use")))
           {
-            player.sendMessage("You don't have enough swag.");
+            player.sendMessage(noperms);
             return true;
           }
           
@@ -305,7 +306,7 @@ public class Main extends JavaPlugin {
             Player player = (Player) sender;
             if (!(player.hasPermission("millenium.prefix.setothers")))
             {
-              player.sendMessage("You don't have enough swag.");
+              player.sendMessage(noperms);
               return true;
             }
           }
