@@ -66,7 +66,7 @@ public class Main extends JavaPlugin {
             player.sendMessage("You do not have enough swag.");
             return true;
           }
-          String playerName = player.getName().toString();
+          String playerName = player.getName();
           
           resetPrefix(playerName);
           sender.sendMessage("Your prefix was reset.");
@@ -252,11 +252,11 @@ public class Main extends JavaPlugin {
           
           /** Get variables, set prefix */
           String sendPrefixesTo = getConfig().getString("sendPrefixesTo");
-          String playerName = player.getName().toString();
+          String playerName = player.getName();
           setPrefix(playerName, playerNewPrefix);
           
           /** This sets the prefix someone set inside of the config file to check for abuse */
-          getConfig().set("prefixes." + player.getName(), prefixWithoutAmpersands);
+          getConfig().set("prefixes." + playerName, prefixWithoutAmpersands);
           saveConfig();
           
           /** Alerts player that they set their prefix */
@@ -266,9 +266,9 @@ public class Main extends JavaPlugin {
           /** Alert chosen staff, broadcast to server */
           Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "mail send " 
           + sendPrefixesTo + " Player, " + 
-              player.getName() + " has set their prefix to " + prefixWithoutAmpersands + ".");
+              playerName + " has set their prefix to " + prefixWithoutAmpersands + ".");
           Bukkit.broadcastMessage(announcePrefix + ChatColor.AQUA + 
-              "" + player.getName() + " has set their " + ChatColor.BOLD + "prefix" + 
+              "" + playerName + " has set their " + ChatColor.BOLD + "prefix" + 
               ChatColor.AQUA + " using /prefix!");
           return true;
         }
