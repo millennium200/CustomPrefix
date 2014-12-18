@@ -4,6 +4,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.craftbukkit.libs.jline.internal.InputStreamReader;
+import org.bukkit.craftbukkit.libs.org.ibex.nestedvm.util.Seekable.File;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -13,6 +17,9 @@ public class Main extends JavaPlugin {
       "CustomPrefix" + ChatColor.DARK_GRAY + "]" + ChatColor.RESET + " ";
   String noperms = ChatColor.translateAlternateColorCodes('&', "&cError: &4You don't have enough swag to do this.");
   String warning = ChatColor.RED + "[Warning:]" + " " + ChatColor.DARK_RED + "That prefix is too long.";
+  
+  private FileConfiguration prefixesList = null;
+  private File prefixesListFile = null;
   
   public void onEnable()
   {
@@ -498,6 +505,23 @@ public class Main extends JavaPlugin {
       Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), testString);
       //Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "manudelv " +
       //    playerName + " prefix");
+    }
+  }
+  
+  public void reloadPrefixesListConfig()
+  {
+    if (prefixesListFile == null)
+    {
+      prefixesListFile = new File(getDataFolder(), "prefixesList.yml");
+    }
+    prefixesList = YamlConfiguration.loadConfiguration(prefixesListFile);
+    
+    // Look for defaults in the jar
+    Reader defConfigStream = new InputStreamReader(this.getResource("prefixesList.yml"), "UTF8");
+    if (defConfigStream != null)
+    {
+      YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
+      prefixesList.setDefaults(defConfig);
     }
   }
   
