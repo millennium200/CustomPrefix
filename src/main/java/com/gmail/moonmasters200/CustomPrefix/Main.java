@@ -70,6 +70,10 @@ public class Main extends JavaPlugin {
           
           resetPrefix(playerName);
           sender.sendMessage("Your prefix was reset.");
+          
+          /** This sets the prefix someone set inside of the config file to check for abuse */
+          getConfig().set("prefixes." + playerName, "thisprefixwasreset");
+          saveConfig();
           return true;
         }
         return false;
@@ -287,6 +291,10 @@ public class Main extends JavaPlugin {
           }
           resetPrefix(playerName);
           sender.sendMessage(announcePrefix + "Prefix reset");
+          
+          /** This sets the prefix someone set inside of the config file to check for abuse */
+          getConfig().set("prefixes." + playerName, "anadminresetthis");
+          saveConfig();
           return true;
         }
         return false;
