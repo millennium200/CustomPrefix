@@ -27,7 +27,7 @@ public class Main extends JavaPlugin {
       if (args.length == 0)
       {
         sender.sendMessage(announcePrefix + "CustomPrefix plugin developed by millenium200");
-        //sender.sendMessage(announcePrefix + "/prefix check <playername>");
+        sender.sendMessage(announcePrefix + "/prefix check <playername>");
         sender.sendMessage(announcePrefix + "/prefix set <prefix> [username]");
         sender.sendMessage(announcePrefix + "/prefix reset [username]");
         sender.sendMessage(announcePrefix + "/prefix reloadconfig");
