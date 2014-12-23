@@ -502,7 +502,7 @@ public class Main extends JavaPlugin {
     else if (getServer().getPluginManager().getPlugin("GroupManager") != null)
     {
       String testString = "manudelv " + playerName + " prefix";
-      Bukkit.broadcastMessage(testString);
+      //Bukkit.broadcastMessage(testString);
       Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), testString);
       //Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "manudelv " +
       //    playerName + " prefix");
