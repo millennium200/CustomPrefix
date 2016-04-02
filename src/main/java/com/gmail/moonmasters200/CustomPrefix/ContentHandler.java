@@ -120,6 +120,15 @@ public class ContentHandler
       }
     }
     
+    // Check if there is no text in noColorPrefix (the prefix was just colors)
+    if (playerData.getNoColorPrefix().length() == 0)
+    {
+      errorCode = NOT_ALPHANUMERIC;
+      alertUser();
+      playerData.setStatus(false);
+      return playerData;
+    }
+    
     // Everything is okay
     playerData.setStatus(true);
     return playerData;
