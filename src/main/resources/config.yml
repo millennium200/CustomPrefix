@@ -28,8 +28,8 @@ closingBracket: '&8&l] &5&l'
 # and add the code (only the letter) to the following list
 # By default, &4 (dark red) and &c (red) are blocked
 bannedcolors:
-  - 4
-  - c
+  - '4'
+  - 'c'
 
 # Here, you can add words to be blocked in prefixes
 # To add to this list, keep spacing and add "  - word" where word
