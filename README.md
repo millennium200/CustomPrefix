@@ -2,8 +2,11 @@ CustomPrefix
 ============
 Prefix plugin for Bukkit
 
-Enables owners to give admins or donors permission to change their own PermissionsEX & GroupManager* prefix 
+Enables owners to give admins or donors permission to change their own prefix* 
 with the command /prefix set {prefix}.
+
+* You must have a permissions plugin / prefix plugin which allows you to set
+  a user's prefix through a command for this plugin to work.
 
 Bukkit Link: http://dev.bukkit.org/bukkit-plugins/customprefix/
 
@@ -23,4 +26,3 @@ Permissions:
  - millenium.prefix.check
  - millenium.prefix.resetothers
 
-*: More permissions plugins may be supported later.
