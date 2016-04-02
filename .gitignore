@@ -58,3 +58,4 @@ $RECYCLE.BIN/
 *.msm
 *.msp
 target/maven-archiver/pom.properties
+/target/

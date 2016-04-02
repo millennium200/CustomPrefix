@@ -1,26 +1,40 @@
 package com.gmail.moonmasters200.CustomPrefix;
 
+import java.io.File;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.util.logging.Level;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Main extends JavaPlugin {
   
-  String announcePrefix = "" + ChatColor.DARK_GRAY + "[" + ChatColor.BLUE + ChatColor.BOLD +
+  private FileConfiguration prefixesConfig = null;
+  private File prefixesConfigFile = null;
+  
+  private String announcePrefix = "" + ChatColor.DARK_GRAY + "[" + ChatColor.BLUE + ChatColor.BOLD +
       "CustomPrefix" + ChatColor.DARK_GRAY + "]" + ChatColor.RESET + " ";
-  String noperms = ChatColor.translateAlternateColorCodes('&', "&cError: &4You don't have enough swag to do this.");
-  String warning = ChatColor.RED + "[Warning:]" + " " + ChatColor.DARK_RED + "That prefix is too long.";
+  private String noperms = ChatColor.translateAlternateColorCodes('&', "&cError: &4You don't have enough swag to do this.");
   
   public void onEnable()
   {
     this.saveDefaultConfig();
+    this.saveDefaultPrefixesConfig();
   }
   
   public boolean onCommand(CommandSender sender, Command cmd, String StringLabel, String[] args)
   {
+    PlayerData playerData = new PlayerData();
+    ContentHandler handler = new ContentHandler();
+    CommandExecutor executor = new CommandExecutor();
+    
     if (cmd.getName().equalsIgnoreCase("prefix"))
     {
       /** No arguments */
@@ -58,7 +72,9 @@ public class Main extends JavaPlugin {
         {
           if (!(sender instanceof Player))
           {
-            return false;
+            sender.sendMessage(announcePrefix + "Only players can reset their"
+                + " own prefixes.");
+            return true;
           }
           Player player = (Player) sender;
           if (!(player.hasPermission("millenium.prefix.use")))
@@ -67,13 +83,14 @@ public class Main extends JavaPlugin {
             return true;
           }
           String playerName = player.getName();
+          playerData.setPlayerName(playerName);
           
-          resetPrefix(playerName);
+          executor.resetPrefix(getConfig(), playerData);
           sender.sendMessage("Your prefix was reset.");
           
           /** This sets the prefix someone set inside of the config file to check for abuse */
-          getConfig().set("prefixes." + playerName, "thisprefixwasreset");
-          saveConfig();
+          getPrefixesConfig().set("prefixes." + playerName, "thisprefixwasreset");
+          savePrefixesConfig();
           return true;
         }
         return false;
@@ -123,145 +140,20 @@ public class Main extends JavaPlugin {
             return true;
           }
           
-          // Get the second argument and store as new prefix.
+          // Get the second argument and store as new prefix & store playerName
+          String playerName = player.getName();
           String playerNewPrefix = args[1];
           
-          // Get the length of the new prefix
-          int prefixLength = playerNewPrefix.length();
-          
-          // Prefixes need to be 14 characters or shorter
-          if (prefixLength > 14)
-          {
-            sender.sendMessage(warning);
-            return true;
-          }
-          
-          // This checks whether a prefix is alphanumeric
-          char testLetter;
-          for (int n = 0; n < prefixLength;)
-          {
-            testLetter = playerNewPrefix.charAt(n);
-            n++;
-            if (Character.isLetter(testLetter) || Character.isDigit(testLetter) ||
-                testLetter == '&')
-            {
-              continue;
-            }
-            else
-            {
-              sender.sendMessage("Prefixes need to be alphanumeric.");
-              return true;
-            }
-          }
-          
-          // This code checks each color used
-          // Default color is &5
-          // Not allowed colors are &4, &d, and &c, &k formatting not allowed either
-          int locationColor; char color;
-          char lastLetter = playerNewPrefix.charAt(prefixLength - 1);
-          if (lastLetter == 'k')
-          {
-            sender.sendMessage("Prefixes can not be formatted like that.");
-            return true;
-          }
-          else if (lastLetter == 'd' || lastLetter == 'c' || lastLetter == '4')
-          {
-            sender.sendMessage("Prefixes can not be red or pink.");
-          }
-          
-          // Loop to check
-          String[] prefixArray = new String[prefixLength];
-          for (int i = 0; i < prefixLength; i++)
-          {
-            if (playerNewPrefix.charAt(i) == '&')
-            {
-              /** In this if statement, we inspect the '&''s */
-              locationColor = i+1;
-              color = playerNewPrefix.charAt(locationColor);
-              if (color == 'd' || color == '4' || color == 'c')
-              {
-                sender.sendMessage("You can't use that color.");
-                return true;
-              } else if (color == 'k')
-              {
-                sender.sendMessage("You can't format your prefix like that.");
-                return true;
-              }
-              prefixArray[i] = "null";
-            }
-            else if (playerNewPrefix.charAt(i) != '&')
-            {
-              /** This sets up a system so that we can bannedwords */
-              /** This following if statement is very necessary, because
-               *  without it, there would be an error from trying to get the char before
-               *  the prefix started. ie. prefix = prefix, looking for a value before p.
-               */
-              if ((i == 0))
-              {
-                prefixArray[i] = Character.toString(playerNewPrefix.charAt(i));
-              }
-              else
-              {
-                if (playerNewPrefix.charAt(i-1) != '&')
-                {
-                  prefixArray[i] = Character.toString(playerNewPrefix.charAt(i));
-                }
-                else
-                {
-                  prefixArray[i] = "null";
-                }
-              }
-            }
-          }
-          
-          /** Start of checking prefixes with bannedwords */
-          // This checks for inappropriate tags, staff tags, derogatory, etc
-          // The bannedwords are stored in the config.yml
-          StringBuilder modifiedString = new StringBuilder();
-          for(int i = 0; i < prefixArray.length; i++)
-          {
-            if(prefixArray[i].equalsIgnoreCase("null"))
-            {
-              continue;
-            }
-            modifiedString.append(prefixArray[i]);
-          }
-          String prefixWithoutAmpersands = modifiedString.toString();
-          
-          // Pulls the string list from the config.yml of bannedwords into an array
-          String[] bannedWords = getConfig().getStringList("bannedwords").toArray(new
-              String[getConfig().getStringList("bannedwords").size()]);
-          String prefixLowerCase = prefixWithoutAmpersands.toLowerCase();
-          
-          // This check checks whether the prefix is longer than the specified length in
-          // the config.yml and is different from way above cause it does not include &'s
-          if (prefixWithoutAmpersands.length() > getConfig().getInt("maxPrefixLength"))
-          {
-            sender.sendMessage(warning);
-            return true;
-          }
-          
-          // Checks whether prefixLowerCase (without ampersands) contains any bannedwords
-          for (int i = 0; i < bannedWords.length; i++)
-          {
-            if (prefixLowerCase.contains(bannedWords[i]))
-            {
-              sender.sendMessage("You cannot use \"" + ChatColor.RED + ChatColor.ITALIC + ChatColor.BOLD +
-                  "" + bannedWords[i] + ChatColor.RESET + "\" in your prefix.");
-              return true;
-            }
-            i++;
-          }
-          /** End of checking prefix with bannedwords */
+          playerData = handler.check(getConfig(), sender, playerName, playerNewPrefix);
+          if (playerData.getStatus() == false) return true;
           
           /** Get variables, set prefix */
           String sendPrefixesTo = getConfig().getString("sendPrefixesTo");
-          String playerName = player.getName();
-          setPrefix(playerName, playerNewPrefix);
+          executor.setPrefix(getConfig(), playerData);
           
           /** This sets the prefix someone set inside of the config file to check for abuse */
-          getConfig().set("prefixes." + playerName, prefixWithoutAmpersands);
-          saveConfig();
+          getPrefixesConfig().set("prefixes." + playerName, playerData.getNoColorPrefix());
+          savePrefixesConfig();
           
           /** Alerts player that they set their prefix */
           player.sendMessage(announcePrefix + ChatColor.GREEN + "You set your prefix to " + 
@@ -270,7 +162,7 @@ public class Main extends JavaPlugin {
           /** Alert chosen staff, broadcast to server */
           Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "mail send " 
           + sendPrefixesTo + " Player, " + 
-              playerName + " has set their prefix to " + prefixWithoutAmpersands + ".");
+              playerName + " has set their prefix to " + playerData.getNoColorPrefix() + ".");
           Bukkit.broadcastMessage(announcePrefix + ChatColor.AQUA + 
               "" + playerName + " has set their " + ChatColor.BOLD + "prefix" + 
               ChatColor.AQUA + " using /prefix!");
@@ -280,21 +172,33 @@ public class Main extends JavaPlugin {
         else if (args[0].equalsIgnoreCase("reset"))
         {
           String playerName = args[1].toString();
+          playerData.setPlayerName(playerName);
           if (sender instanceof Player)
           {
             Player player = (Player) sender;
-            if (!(player.hasPermission("millenium.prefix.resetothers")))
+            if (!(player.hasPermission("millenium.prefix.resetothers") 
+                || (player.getName().equals(playerName)
+                && player.hasPermission("millenium.prefix.use"))))
             {
               player.sendMessage("You do not have enough swag.");
               return true;
             }
           }
-          resetPrefix(playerName);
+          executor.resetPrefix(getConfig(), playerData);
           sender.sendMessage(announcePrefix + "Prefix reset");
           
-          /** This sets the prefix someone set inside of the config file to check for abuse */
-          getConfig().set("prefixes." + playerName, "anadminresetthis");
-          saveConfig();
+          if (sender instanceof Player)
+          {
+            Player player = (Player) sender;
+            if (player.getName().equals(playerName))
+            {
+              getPrefixesConfig().set("prefixes." + playerName, "thisprefixwasreset");
+              savePrefixesConfig();
+              return true;
+            }
+          }
+          getPrefixesConfig().set("prefixes." + playerName, "anadminresetthis");
+          savePrefixesConfig();
           return true;
         }
         return false;
@@ -312,7 +216,9 @@ public class Main extends JavaPlugin {
           if (sender instanceof Player)
           {
             Player player = (Player) sender;
-            if (!(player.hasPermission("millenium.prefix.setothers")))
+            if (!(player.hasPermission("millenium.prefix.setothers")
+                || (player.getName().equals(playerName)
+                    && player.hasPermission("millenium.prefix.use"))))
             {
               player.sendMessage(noperms);
               return true;
@@ -322,139 +228,34 @@ public class Main extends JavaPlugin {
           // Get the second argument and store as new prefix.
           String playerNewPrefix = args[1];
           
-          // Get the length of the new prefix
-          int prefixLength = playerNewPrefix.length();
+          playerData = handler.check(getConfig(), sender, playerName, playerNewPrefix);
+          if (playerData.getStatus() == false) return true;
           
-          // Prefixes need to be 14 characters or shorter
-          if (prefixLength > 14)
-          {
-            sender.sendMessage(warning);
-            return true;
-          }
-          
-          // This checks whether a prefix is alphanumeric
-          char testLetter;
-          for (int n = 0; n < prefixLength;)
-          {
-            testLetter = playerNewPrefix.charAt(n);
-            n++;
-            if (Character.isLetter(testLetter) || Character.isDigit(testLetter) ||
-                testLetter == '&')
-            {
-              continue;
-            }
-            else
-            {
-              sender.sendMessage("Prefixes need to be alphanumeric.");
-              return true;
-            }
-          }
-          
-          // This code checks each color used
-          // Default color is &5
-          // Not allowed colors are &4, &d, and &c, &k formatting not allowed either
-          int locationColor; char color;
-          char lastLetter = playerNewPrefix.charAt(prefixLength - 1);
-          if (lastLetter == 'k')
-          {
-            sender.sendMessage("Prefixes can not be formatted like that.");
-            return true;
-          }
-          else if (lastLetter == 'd' || lastLetter == 'c' || lastLetter == '4')
-          {
-            sender.sendMessage("Prefixes can not be red or pink.");
-          }
-          
-          // Loop to check
-          String[] prefixArray = new String[prefixLength];
-          for (int i = 0; i < prefixLength; i++)
-          {
-            if (playerNewPrefix.charAt(i) == '&')
-            {
-              /** In this if statement, we inspect the '&''s */
-              locationColor = i+1;
-              color = playerNewPrefix.charAt(locationColor);
-              if (color == 'd' || color == '4' || color == 'c')
-              {
-                sender.sendMessage("You can't use that color.");
-                return true;
-              } else if (color == 'k')
-              {
-                sender.sendMessage("You can't format your prefix like that.");
-                return true;
-              }
-              prefixArray[i] = "null";
-            }
-            else if (playerNewPrefix.charAt(i) != '&')
-            {
-              /** This sets up a system so that we can bannedwords */
-              /** This following if statement is very necessary, because
-               *  without it, there would be an error from trying to get the char before
-               *  the prefix started. ie. prefix = prefix, looking for a value before p.
-               */
-              if ((i == 0))
-              {
-                prefixArray[i] = Character.toString(playerNewPrefix.charAt(i));
-              }
-              else
-              {
-                if (playerNewPrefix.charAt(i-1) != '&')
-                {
-                  prefixArray[i] = Character.toString(playerNewPrefix.charAt(i));
-                }
-                else
-                {
-                  prefixArray[i] = "null";
-                }
-              }
-            }
-          }
-          
-          /** Start of checking prefixes with bannedwords */
-          // This checks for inappropriate tags, staff tags, derogatory, etc
-          // The bannedwords are stored in the config.yml
-          StringBuilder modifiedString = new StringBuilder();
-          for(int i = 0; i < prefixArray.length; i++)
-          {
-            if(prefixArray[i].equalsIgnoreCase("null"))
-            {
-              continue;
-            }
-            modifiedString.append(prefixArray[i]);
-          }
-          String prefixWithoutAmpersands = modifiedString.toString();
-          
-          // Pulls the string list from the config.yml of bannedwords into an array
-          String[] bannedWords = getConfig().getStringList("bannedwords").toArray(new
-              String[getConfig().getStringList("bannedwords").size()]);
-          String prefixLowerCase = prefixWithoutAmpersands.toLowerCase();
-          
-          // This check checks whether the prefix is longer than the specified length in
-          // the config.yml and is different from way above cause it does not include &'s
-          if (prefixWithoutAmpersands.length() > getConfig().getInt("maxPrefixLength"))
-          {
-            sender.sendMessage(warning);
-            return true;
-          }
-          
-          // Checks whether prefixLowerCase (without ampersands) contains any bannedwords
-          for (int i = 0; i < bannedWords.length; i++)
-          {
-            if (prefixLowerCase.contains(bannedWords[i]))
-            {
-              sender.sendMessage("You cannot use \"" + ChatColor.RED + ChatColor.ITALIC + ChatColor.BOLD +
-                  "" + bannedWords[i] + ChatColor.RESET + "\" in your prefix.");
-              return true;
-            }
-            i++;
-          }
-          /** End of checking prefix with bannedwords */
-          
-          setPrefix(playerName, playerNewPrefix);
+          executor.setPrefix(getConfig(), playerData);
           
           /** This sets the prefix someone set inside of the config file to check for abuse */
-          getConfig().set("prefixes." + playerName, prefixWithoutAmpersands);
-          saveConfig();
+          getPrefixesConfig().set("prefixes." + playerName, playerData.getNoColorPrefix());
+          savePrefixesConfig();
+          
+          if (sender instanceof Player)
+          {
+            Player player = (Player) sender;
+            if (player.getName().equals(playerName))
+            {
+              /** Alerts player that they set their prefix */
+              player.sendMessage(announcePrefix + ChatColor.GREEN + "You set your prefix to " + 
+              ChatColor.RESET + ChatColor.BOLD + playerNewPrefix);
+              
+              /** Alert chosen staff, broadcast to server */
+              Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "mail send " 
+              + sendPrefixesTo + " Player, " + 
+                  playerName + " has set their prefix to " + playerData.getNoColorPrefix() + ".");
+              Bukkit.broadcastMessage(announcePrefix + ChatColor.AQUA + 
+                  "" + playerName + " has set their " + ChatColor.BOLD + "prefix" + 
+                  ChatColor.AQUA + " using /prefix!");
+              return true;
+            }
+          }
           
           /** Alerts sender that prefix was set */
           sender.sendMessage(announcePrefix + ChatColor.GREEN + playerName +
@@ -463,7 +264,7 @@ public class Main extends JavaPlugin {
           /** Alerts staff about prefix */
           Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "mail send " 
           + sendPrefixesTo + " Player, " + sender.toString() + "has set " + playerName + "'s prefix"
-              + " to " + prefixWithoutAmpersands + ".");
+              + " to " + playerData.getNoColorPrefix() + ".");
           return true;
         }
         return false;
@@ -473,39 +274,61 @@ public class Main extends JavaPlugin {
     return false;
   }
   
-  public void setPrefix (String playerName, String playerNewPrefix)
+  public void reloadPrefixesConfig()
   {
-    String startingBracket = getConfig().getString("startingBracket");
-    String closingBracket = getConfig().getString("closingBracket");
-    
-    String prefix = startingBracket + playerNewPrefix + closingBracket;
-    
-    if (getServer().getPluginManager().getPlugin("PermissionsEx") != null)
+    if (prefixesConfigFile == null)
     {
-      Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " +
-          playerName + " prefix " + "\"" + prefix + "\"");
+      prefixesConfigFile = new File(getDataFolder(), "prefixes.yml");
     }
-    else if (getServer().getPluginManager().getPlugin("GroupManager") != null)
-    {
-      Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "manuaddv " +
-          playerName + " prefix '" + prefix + "'");
+    prefixesConfig = YamlConfiguration.loadConfiguration(prefixesConfigFile);
+    
+    // Look for defaults
+    Reader defConfigStream;
+    try {
+      defConfigStream = new InputStreamReader(this.getResource("prefixes.yml"), "UTF-8");
+      if (defConfigStream != null)
+      {
+        YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
+        prefixesConfig.setDefaults(defConfig);
+      }
+    } catch (Throwable t) {
+      t.printStackTrace();
     }
   }
   
-  public void resetPrefix (String playerName)
+  public FileConfiguration getPrefixesConfig()
   {
-    if (getServer().getPluginManager().getPlugin("PermissionsEx") != null)
+    if (prefixesConfig == null)
     {
-      Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "pex user " +
-          playerName + " prefix \"\"");
+      reloadPrefixesConfig();
     }
-    else if (getServer().getPluginManager().getPlugin("GroupManager") != null)
+    return prefixesConfig;
+  }
+  
+  public void savePrefixesConfig()
+  {
+    if (prefixesConfig == null || prefixesConfigFile == null)
     {
-      String testString = "manudelv " + playerName + " prefix";
-      //Bukkit.broadcastMessage(testString);
-      Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), testString);
-      //Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "manudelv " +
-      //    playerName + " prefix");
+      return;
     }
-  }  
+    try {
+      getPrefixesConfig().save(prefixesConfigFile);
+    } catch(Throwable t)
+    {
+      getLogger().log(Level.SEVERE, "Could not save config to " + prefixesConfigFile, t);
+    }
+  }
+  
+  public void saveDefaultPrefixesConfig()
+  {
+    if (prefixesConfigFile == null)
+    {
+      prefixesConfigFile = new File(getDataFolder(), "prefixes.yml");
+    }
+    if (!prefixesConfigFile.exists())
+    {
+      this.saveResource("prefixes.yml", false);
+    }
+  }
+  
 }
