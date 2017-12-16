@@ -163,7 +163,8 @@ public class Main extends JavaPlugin {
           Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "mail send " 
           + sendPrefixesTo + " Player, " + 
               playerName + " has set their prefix to " + playerData.getNoColorPrefix() + ".");
-          Bukkit.broadcastMessage(announcePrefix + ChatColor.AQUA + 
+          boolean announceChange = getConfig().getBoolean("announceChanges");
+          if (announceChange) Bukkit.broadcastMessage(announcePrefix + ChatColor.AQUA + 
               "" + playerName + " has set their " + ChatColor.BOLD + "prefix" + 
               ChatColor.AQUA + " using /prefix!");
           return true;

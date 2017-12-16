@@ -12,6 +12,9 @@
 setprefixcommand: pex user {PLAYER} prefix "{PREFIX}"
 resetprefixcommand: pex user {PLAYER} prefix ""
 
+# This option determines whether custom prefix changes should be announced or not.
+announceChanges: true
+
 # This is the maximum length of the prefix.  Note, this does not include formatting
 # The maximul length of prefixes including formatting (ie. &2) is 14 characters.
 maxPrefixLength: 8
